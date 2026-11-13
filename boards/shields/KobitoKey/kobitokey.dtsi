@@ -5,9 +5,12 @@
 /* NOTE: この include は overlay 側で繰り返さないこと。二重に読むと下の
  *   上書きが既定値に戻る (moNa2 の v0.4 移行で踏んだ)。 */
 #include <input/processors/runtime-input-processor.dtsi>
-/* matrix_transform.h は必ず上の include より後に置く。runtime-input-processor.dtsi が
- * keys.h を読み、keys.h の RC() (右 Ctrl) が matrix_transform.h の RC(row,col) と
- * 同名なので、後から定義した方が効く。順序が逆だと transform の map が壊れる。 */
+/* RC という名前のマクロが2つある:
+ *   matrix_transform.h  RC(row, col)   … 下の transform の map 用
+ *   modifiers.h         RC(keycode)    … 右 Ctrl 修飾 (keys.h 経由)
+ * 上の runtime-input-processor.dtsi が keys.h を読むので、matrix_transform.h を
+ * その後に include して map 用の定義を効かせる (逆順だと前処理で落ちる)。
+ * keymap で右 Ctrl の RC() が使えるよう、このファイルの末尾で定義を戻している。 */
 #include <dt-bindings/zmk/matrix_transform.h>
 
 / {
@@ -107,3 +110,8 @@
     /* 正の WHEEL = 上スクロール、正の REL_Y = カーソル下なので縦だけ反転。 */
     y-invert;
 };
+
+/* transform の map はここより上にしか無いので、RC() を右 Ctrl 修飾に戻す。
+ * keys.h は #pragma once で、keymap が include し直しても再定義されないため。 */
+#undef RC
+#define RC(keycode) APPLY_MODS(MOD_RCTL, keycode)
