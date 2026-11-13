@@ -1,7 +1,5 @@
 #include "kobitokey.dtsi"
 #include <zephyr/dt-bindings/input/input-event-codes.h>
-#include <input/processors.dtsi>
-#include <input/processors/sensor_rotation.dtsi>
 
 &xiao_serial { status = "disabled"; };
 
@@ -31,64 +29,46 @@
     pinctrl-names = "default", "sleep";
     cs-gpios = <&gpio0 9 GPIO_ACTIVE_LOW>;
 
+    /* cormoran 版 PMW3610 ドライバ (DYA Studio のセンサータブ対応)。
+     * Zephyr 4.1 が純正 "pixart,pmw3610" を取り込んだため、公式ファームの
+     * badjeff 版 compatible はそのまま使えない。
+     * 軸の反転は CONFIG_PMW3610_INVERT_X / _Y (KobitoKey_left.conf)。 */
     tb_left: trackball@0 {
         status = "okay";
-        compatible = "pixart,pmw3610";
+        compatible = "cormoran,pmw3610";
         reg = <0>;
         spi-max-frequency = <2000000>;
         irq-gpios = <&gpio0 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-        cpi = <200>; /* センサー感度 */
-
-
+        cpi = <600>;
         evt-type = <INPUT_EV_REL>;
         x-input-code = <INPUT_REL_X>;
         y-input-code = <INPUT_REL_Y>;
+        /* DYA Studio 上でこのセンサーを識別するための短い ID */
+        settings-id = "tbl";
     };
 };
 
-/ {
-    sensor_rotation_left: sensor-rotation-left {
-        compatible = "zmk,input-processor-sensor-rotation";
-        status = "okay";
-        #input-processor-cells = <0>;
-        rotation-angle = <(-24)>;
-    };
-
-    sensor_rotation_right: sensor-rotation-right {
-        compatible = "zmk,input-processor-sensor-rotation";
-        #input-processor-cells = <0>;
-        status = "okay";
-        rotation-angle = <24>;
-    };
-};
-
+/* 左ボール: スクロール専用 */
 &tb_left_listener {
     status = "okay";
     device = <&tb_left>;
-
-    input-processors =
-            <&sensor_rotation_left>,
-            <&zip_x_scaler 0 1>,
-            <&zip_y_scaler 1 15>,
-            <&zip_xy_to_scroll_mapper>,
-            <&zip_scroll_transform INPUT_TRANSFORM_Y_INVERT>,
-            <&zip_scroll_transform INPUT_TRANSFORM_X_INVERT>;
-    };
-
-/ {
-  /omit-if-no-ref/ zip_temp_layer: zip_temp_layer {
-    compatible = "zmk,input-processor-temp-layer";
-    #input-processor-cells = <2>;
-    require-prior-idle-ms = <350>; /* キー押下後、何msオートマウスレイヤに入らないようにするか、誤爆防止 */
-  };
+    input-processors = <&scroll_runtime_input_processor>;
 };
 
+/ {
+    /omit-if-no-ref/ zip_temp_layer: zip_temp_layer {
+        compatible = "zmk,input-processor-temp-layer";
+        #input-processor-cells = <2>;
+        require-prior-idle-ms = <350>; /* キー押下後、何msオートマウスレイヤに入らないようにするか */
+    };
+};
+
+/* 右ボール (split 経由): カーソル + オートマウスレイヤー (公式のまま) */
 &tb_right_listener {
     status = "okay";
-
     input-processors =
-        <&sensor_rotation_right>,
-        <&zip_temp_layer 3 5000>; /* オートマウスレイヤーの指定とトラボ操作及びマウスボタン押下後に滞留する時間 */
+        <&zip_temp_layer 3 5000>,
+        <&mouse_runtime_input_processor>;
 };
 
 &zip_temp_layer {
