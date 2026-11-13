@@ -5,6 +5,7 @@
 /* NOTE: この include は overlay 側で繰り返さないこと。二重に読むと下の
  *   上書きが既定値に戻る (moNa2 の v0.4 移行で踏んだ)。 */
 #include <input/processors/runtime-input-processor.dtsi>
+#include <scroll-snap.dtsi>
 /* RC という名前のマクロが2つある:
  *   matrix_transform.h  RC(row, col)   … 下の transform の map 用
  *   modifiers.h         RC(keycode)    … 右 Ctrl 修飾 (keys.h 経由)
@@ -99,7 +100,8 @@
 };
 
 /* 左ボール = スクロール。公式は sensor_rotation -24°、縦のみ・1/15。
- * ここでは moNa2 で詰めた値 (CPI 600 / 0.40x / 縦横両方) から始める。 */
+ * ここでは moNa2 で詰めた値 (CPI 600 / 0.40x / 縦横両方) から始める。
+ * moNa2 / torabo-tsuki LP と違い active-layers は付けない: 左ボールは常時スクロール。 */
 &scroll_runtime_input_processor {
     x-codes = <INPUT_REL_X>;
     y-codes = <INPUT_REL_Y>;

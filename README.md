@@ -11,8 +11,12 @@
 | 回転・倍率 | sensor_rotation + scaler (固定) | runtime input processor (Studio で調整可) |
 | central | 左 | 左 (変更なし) |
 
-- 左ボール = スクロール、右ボール = カーソル + オートマウスレイヤー (公式と同じ役割)
-- キー配列はまだ公式の4レイヤーのまま。moNa2 の配列・ジェスチャー・慣性スクロールは未移植
+- 左ボール = 常時スクロール、右ボール = カーソル。公式のオートマウスレイヤーは外した
+- キー配列は torabo-tsuki LP
+  ([Daytona0306/zmk-keyboard-torabo-tsuki-lp](https://github.com/Daytona0306/zmk-keyboard-torabo-tsuki-lp))
+  の移植。対応は `config/KobitoKey.keymap` の冒頭を参照。レイヤー番号は同じ
+- ジェスチャー (右ボール)、慣性スクロールとスクロールスナップ (左ボール)、
+  hold-tap の実行時調整も入っている。ジェスチャー定義は `zmk-dya-common` と共有
 - **トラックボールの向きは実機未確認。** 逆なら DYA Studio のセンサータブで変えて、
   確定値を `boards/shields/KobitoKey/KobitoKey_{left,right}.conf` に反映する
 - モジュールの SHA 固定は `tools/west-pins.py` (使い方は moNa2 の README)
