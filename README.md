@@ -17,10 +17,16 @@
   ([Daytona0306/zmk-keyboard-torabo-tsuki-lp](https://github.com/Daytona0306/zmk-keyboard-torabo-tsuki-lp))
   の移植。13 レイヤーでレイヤー番号も同じ (下の「配列」を参照)
 - ジェスチャー定義は `zmk-dya-common` と共有。hold-tap の実行時調整も入っている
-- キーマップ図は `keymap-drawer/KobitoKey.svg`。keymap を push すると GitHub Actions が作り直して同じブランチへコミットする
 - モジュールの SHA 固定は `tools/west-pins.py` (使い方は moNa2 の README)
 
-**このファームは実機ではまだ一度も動かしていない。** ビルドが通ることしか確認していない。
+実機で両ボールが動くことを確認済み (キーマップの細部は確認中)。
+
+## キーマップ
+
+全 13 レイヤーとコンボの図。`config/KobitoKey.keymap` を push すると GitHub Actions
+(`.github/workflows/draw.yml`) が作り直して、同じブランチへ自動でコミットする。
+
+![KobitoKey のキーマップ](keymap-drawer/KobitoKey.svg)
 
 ## 焼く手順
 
@@ -77,14 +83,5 @@ torabo-tsuki LP から変えた点:
 ダサい使い方はしないこと。
 
 
-Layer 0 QWERTY
-<img width="1280" height="690" alt="Image" src="https://github.com/user-attachments/assets/ef0797b7-a63f-4632-912d-9b5d0115769f" />
-
-Layer 1 NUMBER & ARROW
-<img width="1280" height="690" alt="Image" src="https://github.com/user-attachments/assets/d6347b3c-a238-4278-bacd-e58195774d0e" />
-
-Layer 2 Bluetooth & FUNCTION
-<img width="1280" height="690" alt="Image" src="https://github.com/user-attachments/assets/f1f7cc93-fbd8-4a98-84ea-c8c36ad3952d" />
-
-Layer 3 AUTO MOUSE
-<img width="1280" height="690" alt="Image" src="https://github.com/user-attachments/assets/2efe5275-e460-41bc-ae45-0c0665435268" />
+(公式 README にあったレイヤー画像は公式ファームの QWERTY 配列のもので、このフォークの配列とは違うため外した。
+このフォークの配列は上の「キーマップ」を見ること。)
