@@ -1,6 +1,18 @@
-#include <dt-bindings/zmk/matrix_transform.h>
 #include <dt-bindings/zmk/input_transform.h>
 #include "KobitoKey-layouts.dtsi"
+#include <behaviors/battery_history_request.dtsi>
+#include <input/processors.dtsi>
+/* NOTE: この include は overlay 側で繰り返さないこと。二重に読むと下の
+ *   上書きが既定値に戻る (moNa2 の v0.4 移行で踏んだ)。 */
+#include <input/processors/runtime-input-processor.dtsi>
+#include <scroll-snap.dtsi>
+/* RC という名前のマクロが2つある:
+ *   matrix_transform.h  RC(row, col)   … 下の transform の map 用
+ *   modifiers.h         RC(keycode)    … 右 Ctrl 修飾 (keys.h 経由)
+ * 上の runtime-input-processor.dtsi が keys.h を読むので、matrix_transform.h を
+ * その後に include して map 用の定義を効かせる (逆順だと前処理で落ちる)。
+ * keymap で右 Ctrl の RC() が使えるよう、このファイルの末尾で定義を戻している。 */
+#include <dt-bindings/zmk/matrix_transform.h>
 
 / {
     /* 行列スキャン：rowは左右共通、colは左右で分ける */
@@ -76,3 +88,32 @@
         zmk,physical-layout = &physical_layout0;
     };
 };
+
+/* ── DYA Studio から実行時に調整できる入力プロセッサ ──────────────────
+ * 公式ファームの hsgw/sensor_rotation + zip_*_scaler を置き換える。
+ * 回転角・倍率・反転はここが初期値で、Studio で変えた値は Flash に残る
+ * (settings_reset で消えてここの値に戻る)。 */
+
+/* 右ボール = カーソル。公式は sensor_rotation 24°。 */
+&mouse_runtime_input_processor {
+    rotation-degrees = <24>;
+};
+
+/* 左ボール = スクロール。公式は sensor_rotation -24°、縦のみ・1/15。
+ * ここでは moNa2 で詰めた値 (CPI 600 / 0.40x / 縦横両方) から始める。
+ * moNa2 / torabo-tsuki LP と違い active-layers は付けない: 左ボールは常時スクロール。 */
+&scroll_runtime_input_processor {
+    x-codes = <INPUT_REL_X>;
+    y-codes = <INPUT_REL_Y>;
+    xy-to-scroll-enabled;
+    rotation-degrees = <(-24)>;
+    scale-multiplier = <2>;
+    scale-divisor = <5>;
+    /* 正の WHEEL = 上スクロール、正の REL_Y = カーソル下なので縦だけ反転。 */
+    y-invert;
+};
+
+/* transform の map はここより上にしか無いので、RC() を右 Ctrl 修飾に戻す。
+ * keys.h は #pragma once で、keymap が include し直しても再定義されないため。 */
+#undef RC
+#define RC(keycode) APPLY_MODS(MOD_RCTL, keycode)

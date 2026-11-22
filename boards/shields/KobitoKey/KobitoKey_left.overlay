@@ -1,0 +1,121 @@
+#include "kobitokey.dtsi"
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+#include <dt-bindings/zmk/mouse-gesture.h>
+
+&xiao_serial { status = "disabled"; };
+
+&pinctrl {
+    spi0_default: spi0_default {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK,  0, 5)>,
+                    <NRF_PSEL(SPIM_MOSI, 0, 4)>,
+                    <NRF_PSEL(SPIM_MISO, 0, 4)>;
+        };
+    };
+    spi0_sleep: spi0_sleep {
+        group1 {
+            psels = <NRF_PSEL(SPIM_SCK,  0, 5)>,
+                    <NRF_PSEL(SPIM_MOSI, 0, 4)>,
+                    <NRF_PSEL(SPIM_MISO, 0, 4)>;
+            low-power-enable;
+        };
+    };
+};
+
+&spi0 {
+    status = "okay";
+    compatible = "nordic,nrf-spim";
+    pinctrl-0 = <&spi0_default>;
+    pinctrl-1 = <&spi0_sleep>;
+    pinctrl-names = "default", "sleep";
+    cs-gpios = <&gpio0 9 GPIO_ACTIVE_LOW>;
+
+    /* cormoran 版 PMW3610 ドライバ (DYA Studio のセンサータブ対応)。
+     * Zephyr 4.1 が純正 "pixart,pmw3610" を取り込んだため、公式ファームの
+     * badjeff 版 compatible はそのまま使えない。
+     * 軸の反転は CONFIG_PMW3610_INVERT_X / _Y (KobitoKey_left.conf)。 */
+    tb_left: trackball@0 {
+        status = "okay";
+        compatible = "cormoran,pmw3610";
+        reg = <0>;
+        spi-max-frequency = <2000000>;
+        irq-gpios = <&gpio0 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+        cpi = <600>;
+        evt-type = <INPUT_EV_REL>;
+        x-input-code = <INPUT_REL_X>;
+        y-input-code = <INPUT_REL_Y>;
+        /* DYA Studio 上でこのセンサーを識別するための短い ID */
+        settings-id = "tbl";
+    };
+};
+
+/* RPC からランタイム編集できるマウスジェスチャー。
+ * - ノード名を mouse_gesture にしない (モジュール側の behavior と衝突する)
+ * - RPC が書き換えるのは DT インスタンス0番だけなので、zmk-dya-common の
+ *   gestures.dtsi (keymap から include) より先のここで定義する
+ * - always-active は付けない (付けると全レイヤーでカーソルが止まる)
+ * 経緯は moNa2 の mona2_r.overlay を参照。 */
+/ {
+    mg: rpc_mouse_gesture {
+        compatible = "zmk,input-processor-mouse-gesture";
+        #input-processor-cells = <0>;
+        stroke-size = <20>;
+        movement-threshold = <5>;
+        idle-timeout-ms = <100>;
+        gesture-cooldown-ms = <200>;
+
+        /* trie 構築のためのプレースホルダ。実際の割り当ては RPC で上書きされる。 */
+        placeholder {
+            pattern = <GESTURE_UP GESTURE_RIGHT>;
+            bindings = <&kp ESC>;
+        };
+    };
+
+    /* 慣性スクロール。値は moNa2 と同じ (意味は mona2_r.overlay のコメント参照)。
+     * layer は指定しない: 左ボールは常時スクロールで、連動させるレイヤーが無い。 */
+    scroll_inertia_free: scroll_inertia_free {
+        compatible = "zmk,input-processor-scroll-inertia";
+        #input-processor-cells = <0>;
+        axis      = <0>;
+        scale     = <1000>;
+        scale-div = <1000>;
+        tick = <17>;
+        release = <51>;
+        start = <30>;
+        move = <45>;
+        min-events = <6>;
+        gain = <300>;
+        blend = <700>;
+        friction = <25>;
+        limit = <900>;
+        stop = <1>;
+        span = <12000>;
+        fast = <250>;
+        decay-fast = <996>;
+        decay-slow = <985>;
+        slow = <60>;
+        decay-tail = <982>;
+    };
+};
+
+/* 左ボール: 常時スクロール (+ スナップ + 慣性) */
+&tb_left_listener {
+    status = "okay";
+    device = <&tb_left>;
+    input-processors =
+        <&scroll_runtime_input_processor>,
+        <&zip_scroll_snap>,
+        <&scroll_inertia_free>;
+};
+
+/* 右ボール (split 経由): カーソル。
+ * ジェスチャーレイヤー (7〜12) のルートは keymap が include する
+ * zmk-dya-common の gestures.dtsi がこのリスナーに足す。
+ * 公式のオートマウスレイヤー (zip_temp_layer) は外した: torabo-tsuki LP の
+ * 配列では MOUSE レイヤーにキーで入る。 */
+&tb_right_listener {
+    status = "okay";
+    input-processors =
+        <&mg>,
+        <&mouse_runtime_input_processor>;
+};

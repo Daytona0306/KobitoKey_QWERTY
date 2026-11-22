@@ -1,6 +1,6 @@
 #include <zephyr/dt-bindings/pinctrl/nrf-pinctrl.h>
 #include "kobitokey.dtsi"
-#include <input/processors.dtsi>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
 
 /* 列オフセット */
 &default_transform { col-offset = <5>; };
@@ -29,7 +29,8 @@
 
     tb_right: trackball@0 {
         status = "okay";
-        compatible = "pixart,pmw3610";
+        /* cormoran 版ドライバ。理由は KobitoKey_left.overlay を参照。 */
+        compatible = "cormoran,pmw3610";
         reg = <0>;
         spi-max-frequency = <2000000>;
         irq-gpios = <&gpio0 2 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
@@ -38,6 +39,7 @@
         evt-type = <INPUT_EV_REL>;
         x-input-code = <INPUT_REL_X>;
         y-input-code = <INPUT_REL_Y>;
+        settings-id = "tbr";
     };
 };
 
