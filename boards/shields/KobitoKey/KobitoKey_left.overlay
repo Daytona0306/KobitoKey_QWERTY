@@ -98,6 +98,30 @@
     };
 };
 
+/* 左ボールの音量ジェスチャー (レイヤー 6 = Bluetooth のときだけ)。
+ *   上 = 音量アップ / 下 = 音量ダウン / 左 = ミュート / 右 = マイクミュート (Win+Alt+K)
+ * eager モード: 方向が決まった時点で即発動し、続けて同じ方向に転がすと
+ * stroke-size ぶん進むごとに繰り返す (音量を連続で上げ下げできる)。
+ * gesture-cooldown-ms が連打の間隔の下限。ミュートの二度押しもこれで防ぐ。
+ * RPC が書き換えるのは DT インスタンス 0 番 (&mg) だけなので、&mg より後に定義する。 */
+/ {
+    vol_gest_proc: vol_gest_proc {
+        compatible = "zmk,input-processor-mouse-gesture";
+        #input-processor-cells = <0>;
+        enable-eager-mode;
+        always-active;
+        stroke-size = <20>;
+        movement-threshold = <4>;
+        idle-timeout-ms = <100>;
+        gesture-cooldown-ms = <150>;
+
+        up    { pattern = <GESTURE_UP>;    bindings = <&kp C_VOL_UP>; };
+        down  { pattern = <GESTURE_DOWN>;  bindings = <&kp C_VOL_DN>; };
+        left  { pattern = <GESTURE_LEFT>;  bindings = <&kp C_MUTE>; };
+        right { pattern = <GESTURE_RIGHT>; bindings = <&kp LG(LA(K))>; };
+    };
+};
+
 /* 左ボール: 常時スクロール (+ スナップ + 慣性) */
 &tb_left_listener {
     status = "okay";
@@ -106,6 +130,16 @@
         <&scroll_runtime_input_processor>,
         <&zip_scroll_snap>,
         <&scroll_inertia_free>;
+
+    /* レイヤー 6 の間はスクロールの代わりに音量ジェスチャー。
+     * ドライバの反転で REL_X/Y はカーソルと同じ向き (右 = +X、手前 = +Y) なので
+     * 軸変換は不要。最後の scaler で X/Y を 0 にして、カーソルが動かないようにする。 */
+    route_vol_gest {
+        layers = <6>;
+        input-processors =
+            <&vol_gest_proc>,
+            <&zip_xy_scaler 0 1>;
+    };
 };
 
 /* 右ボールのスクロール (レイヤー 5 = Scroll のときだけ)。
