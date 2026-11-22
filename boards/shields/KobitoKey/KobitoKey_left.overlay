@@ -108,6 +108,79 @@
         <&scroll_inertia_free>;
 };
 
+/* 右ボールのスクロール (レイヤー 5 = Scroll のときだけ)。
+ * moNa2 / torabo-tsuki LP と同じく、レイヤー 5 の間だけカーソルをスクロールに変える。
+ * 左ボール用の scroll_runtime_input_processor は常時スクロールなので共有せず、
+ * 右ボール専用の実体を作る (DYA Studio には "rscroll" として出る)。
+ * 回転 (24°) は手前の mouse_runtime_input_processor が済ませているので 0。 */
+/ {
+    rscroll_runtime_input_processor: rscroll_runtime_input_processor {
+        compatible = "zmk,input-processor-runtime";
+        processor-label = "rscroll";
+        type = <INPUT_EV_REL>;
+        x-codes = <INPUT_REL_X>;
+        y-codes = <INPUT_REL_Y>;
+        xy-to-scroll-enabled;
+        active-layers = <(1 << 5)>;
+        /* 左ボールと同じ 0.40x から始める。右は CPI 600 で左と同じ。 */
+        scale-multiplier = <2>;
+        scale-divisor = <5>;
+        rotation-degrees = <0>;
+        track-remainders;
+        /* 正の WHEEL = 上スクロール、正の REL_Y = カーソル下なので縦だけ反転 (左と同じ)。 */
+        y-invert;
+
+        temp-layer-transparent-behavior = <&trans>;
+        temp-layer-kp-behavior = <&kp>;
+        temp-layer-keep-keycodes = <LEFT_CONTROL LEFT_SHIFT LEFT_ALT LEFT_GUI RIGHT_CONTROL RIGHT_SHIFT RIGHT_ALT RIGHT_GUI>;
+
+        #input-processor-cells = <0>;
+    };
+
+    /* スナップ: zip_scroll_snap と同じ値。状態を左ボールと分けるため別の実体にする。
+     * WHEEL / HWHEEL にしか作用しないので、レイヤー 5 以外のカーソルには影響しない。 */
+    zip_scroll_snap_r: zip_scroll_snap_r {
+        compatible = "zmk,input-processor-scroll-snap";
+        #input-processor-cells = <0>;
+        x-threshold = <5 8>;
+        y-threshold = <1 1>;
+        xy-threshold = <0 0>;
+        require-n-samples = <10>;
+        immediate-snap-threshold = <1500>;
+        lock-duration-ms = <200>;
+        lock-for-next-n-events = <10>;
+        idle-reset-timeout-ms = <200>;
+        track-remainders;
+    };
+
+    /* 慣性: 値は左 (scroll_inertia_free) と同じ。layer = 5 でレイヤー連動にする
+     * (moNa2 と同じ形。レイヤーを抜けると惰性も止まる)。 */
+    scroll_inertia_r: scroll_inertia_r {
+        compatible = "zmk,input-processor-scroll-inertia";
+        #input-processor-cells = <0>;
+        axis      = <0>;
+        layer     = <5>;
+        scale     = <1000>;
+        scale-div = <1000>;
+        tick = <17>;
+        release = <51>;
+        start = <30>;
+        move = <45>;
+        min-events = <6>;
+        gain = <300>;
+        blend = <700>;
+        friction = <25>;
+        limit = <900>;
+        stop = <1>;
+        span = <12000>;
+        fast = <250>;
+        decay-fast = <996>;
+        decay-slow = <985>;
+        slow = <60>;
+        decay-tail = <982>;
+    };
+};
+
 /* 右ボール (split 経由): カーソル。
  * ジェスチャーレイヤー (7〜12) のルートは keymap が include する
  * zmk-dya-common の gestures.dtsi がこのリスナーに足す。
@@ -117,5 +190,8 @@
     status = "okay";
     input-processors =
         <&mg>,
-        <&mouse_runtime_input_processor>;
+        <&mouse_runtime_input_processor>,
+        <&rscroll_runtime_input_processor>,
+        <&zip_scroll_snap_r>,
+        <&scroll_inertia_r>;
 };

@@ -11,6 +11,7 @@
 - キー配列は torabo-tsuki LP ([Daytona0306/zmk-keyboard-torabo-tsuki-lp](https://github.com/Daytona0306/zmk-keyboard-torabo-tsuki-lp))
   の移植。13 レイヤーでレイヤー番号も同じ (下の「配列」を参照)
 - 左ボール = 常時スクロール (スナップ + 慣性)、右ボール = カーソル + ジェスチャー。
+  右ボールもレイヤー 5 (Scroll) の間はスクロールになる (Enter 長押しなど)。
   公式のオートマウスレイヤーは外した
 - ジェスチャー定義は `zmk-dya-common` と共有。hold-tap の実行時調整も入っている
 - モジュールの SHA 固定は `tools/west-pins.py` (使い方は moNa2 の README)
