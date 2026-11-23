@@ -246,10 +246,10 @@
         iPad {
             display-name = "iPad";
             bindings = <
-&trans      &trans     &trans                &trans  &trans                      &trans  &trans  &trans                 &trans  &trans
-&mt LGUI E  &trans     &trans                &trans  &trans                      &trans  &trans  &trans                 &trans  &trans
-&trans      &trans     &trans                &trans  &trans                      &trans  &trans  &trans                 &trans  &trans
-&trans      &kp LCTRL  &mt LEFT_SHIFT LANG2  &trans  &mt LEFT_GUI BACKSPACE      &trans  &trans  &mt RIGHT_SHIFT LANG1  &trans  &trans
+&trans      &trans     &trans                &trans  &trans                      &trans  &trans  &trans             &trans  &trans
+&mt LGUI E  &trans     &trans                &trans  &trans                      &trans  &trans  &trans             &trans  &trans
+&trans      &trans     &trans                &trans  &trans                      &trans  &trans  &trans             &trans  &trans
+&trans      &kp LCTRL  &mt LEFT_SHIFT LANG2  &trans  &mt LEFT_GUI BACKSPACE      &trans  &trans  &mt RIGHT_GUI TAB  &trans  &mt RIGHT_SHIFT LANG1
             >;
         };
 

@@ -154,6 +154,29 @@
     };
 };
 
+/* 左ボールのカーソル (レイヤー 4 = Mouse のときだけ)。DYA Studio には "Lmouse" として出る。
+ * 回転は Lscroll と同じ -24° (左ボールの取り付け角度)。ドライバの反転で REL_X/Y は
+ * カーソルと同じ向きになっているので、軸の反転は要らない。 */
+/ {
+    lmouse_runtime_input_processor: lmouse_runtime_input_processor {
+        compatible = "zmk,input-processor-runtime";
+        processor-label = "Lmouse";
+        type = <INPUT_EV_REL>;
+        x-codes = <INPUT_REL_X>;
+        y-codes = <INPUT_REL_Y>;
+        scale-multiplier = <1>;
+        scale-divisor = <1>;
+        rotation-degrees = <(-24)>;
+        track-remainders;
+
+        temp-layer-transparent-behavior = <&trans>;
+        temp-layer-kp-behavior = <&kp>;
+        temp-layer-keep-keycodes = <LEFT_CONTROL LEFT_SHIFT LEFT_ALT LEFT_GUI RIGHT_CONTROL RIGHT_SHIFT RIGHT_ALT RIGHT_GUI>;
+
+        #input-processor-cells = <0>;
+    };
+};
+
 /* 左ボール: 常時スクロール (+ スナップ + 慣性) */
 &tb_left_listener {
     status = "okay";
@@ -180,6 +203,13 @@
         input-processors =
             <&switcher_gest_proc>,
             <&zip_xy_scaler 0 1>;
+    };
+
+    /* レイヤー 4 (Mouse) の間は左ボールもカーソル (Lmouse)。スクロールはしない。
+     * 子ノードは書いた順に判定されるので、6 と 14 (上) が同時に有効ならそちらが勝つ。 */
+    route_lmouse {
+        layers = <4>;
+        input-processors = <&lmouse_runtime_input_processor>;
     };
 };
 
