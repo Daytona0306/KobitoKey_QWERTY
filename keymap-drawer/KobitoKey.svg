@@ -790,9 +790,8 @@ path.combo {
 <g transform="translate(252, 140)" class="key keypos-24">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
 <text x="0" y="0" class="key tap">
-<tspan x="0" dy="-0.9em">&amp;rmacro</tspan><tspan x="0" dy="1.2em">1</tspan>
+<tspan x="0" dy="-0.6em">&amp;rmacro</tspan><tspan x="0" dy="1.2em">1</tspan>
 </text>
-<text x="0" y="24" class="key hold"><tspan style="font-size: 88%">rec/play</tspan></text>
 </g>
 <g transform="translate(392, 140)" class="key keypos-25">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
@@ -889,9 +888,9 @@ path.combo {
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
 <text x="0" y="0" class="key tap">9</text>
 </g>
-<g transform="translate(252, 28)" class="key trans keypos-4">
-<rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key trans"/>
-<text x="0" y="0" class="key trans tap">[</text>
+<g transform="translate(252, 28)" class="key keypos-4">
+<rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
+<text x="0" y="0" class="key tap">[</text>
 </g>
 <g transform="translate(392, 28)" class="key trans keypos-5">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key trans"/>
@@ -944,11 +943,11 @@ path.combo {
 <text x="0" y="0" class="key tap layer-activator">Mouse</text>
 </a><text x="0" y="24" class="key hold">Back</text>
 </g>
-<g transform="translate(448, 84)" class="key trans keypos-16">
-<rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key trans"/>
+<g transform="translate(448, 84)" class="key keypos-16">
+<rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
 <a href="#Mouse">
-<text x="0" y="0" class="key trans tap layer-activator">Mouse</text>
-</a><text x="0" y="24" class="key trans hold">L Click</text>
+<text x="0" y="0" class="key tap layer-activator">Mouse</text>
+</a><text x="0" y="24" class="key hold">L Click</text>
 </g>
 <g transform="translate(504, 84)" class="key keypos-17">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
@@ -956,11 +955,11 @@ path.combo {
 <text x="0" y="0" class="key tap layer-activator">Mouse</text>
 </a><text x="0" y="24" class="key hold">M Click</text>
 </g>
-<g transform="translate(560, 84)" class="key trans keypos-18">
-<rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key trans"/>
+<g transform="translate(560, 84)" class="key keypos-18">
+<rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
 <a href="#Mouse">
-<text x="0" y="0" class="key trans tap layer-activator">Mouse</text>
-</a><text x="0" y="24" class="key trans hold">R Click</text>
+<text x="0" y="0" class="key tap layer-activator">Mouse</text>
+</a><text x="0" y="24" class="key hold">R Click</text>
 </g>
 <g transform="translate(616, 84)" class="key keypos-19">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
@@ -993,33 +992,28 @@ path.combo {
 <g transform="translate(392, 140)" class="key keypos-25">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
 <text x="0" y="0" class="key tap">
-<tspan x="0" dy="-0.9em">Alt+Gui</tspan><tspan x="0" dy="1.2em">+K</tspan>
+<tspan x="0" dy="-0.6em">Alt+Gui</tspan><tspan x="0" dy="1.2em">+K</tspan>
 </text>
-<text x="0" y="24" class="key hold">Back</text>
 </g>
 <g transform="translate(448, 140)" class="key keypos-26">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
 <text x="0" y="0" class="key tap">MUTE</text>
-<text x="0" y="24" class="key hold">L Click</text>
 </g>
 <g transform="translate(504, 140)" class="key keypos-27">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
 <text x="0" y="0" class="key tap">
-<tspan x="0" dy="-0.9em">VOL</tspan><tspan x="0" dy="1.2em">DN</tspan>
+<tspan x="0" dy="-0.6em">VOL</tspan><tspan x="0" dy="1.2em">DN</tspan>
 </text>
-<text x="0" y="24" class="key hold">M Click</text>
 </g>
 <g transform="translate(560, 140)" class="key keypos-28">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
 <text x="0" y="0" class="key tap">
-<tspan x="0" dy="-0.9em">VOL</tspan><tspan x="0" dy="1.2em">UP</tspan>
+<tspan x="0" dy="-0.6em">VOL</tspan><tspan x="0" dy="1.2em">UP</tspan>
 </text>
-<text x="0" y="24" class="key hold">R Click</text>
 </g>
 <g transform="translate(616, 140)" class="key trans keypos-29">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key trans"/>
 <text x="0" y="0" class="key trans tap">▽</text>
-<text x="0" y="24" class="key trans hold">Back</text>
 </g>
 <g transform="translate(28, 196)" class="key keypos-30">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
@@ -1035,17 +1029,17 @@ path.combo {
 <text x="0" y="0" class="key tap layer-activator">Mouse</text>
 </a><text x="0" y="24" class="key hold">L Click</text>
 </g>
-<g transform="translate(224, 196)" class="key trans keypos-33">
-<rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key trans"/>
+<g transform="translate(224, 196)" class="key keypos-33">
+<rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
 <a href="#Mouse">
-<text x="0" y="0" class="key trans tap layer-activator">Mouse</text>
-</a><text x="0" y="24" class="key trans hold">M Click</text>
+<text x="0" y="0" class="key tap layer-activator">Mouse</text>
+</a><text x="0" y="24" class="key hold">M Click</text>
 </g>
-<g transform="translate(280, 196)" class="key trans keypos-34">
-<rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key trans"/>
+<g transform="translate(280, 196)" class="key keypos-34">
+<rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
 <a href="#Mouse">
-<text x="0" y="0" class="key trans tap layer-activator">Mouse</text>
-</a><text x="0" y="24" class="key trans hold">R Click</text>
+<text x="0" y="0" class="key tap layer-activator">Mouse</text>
+</a><text x="0" y="24" class="key hold">R Click</text>
 </g>
 <g transform="translate(364, 196)" class="key trans keypos-35">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key trans"/>
