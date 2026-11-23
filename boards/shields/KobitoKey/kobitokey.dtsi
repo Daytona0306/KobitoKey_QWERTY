@@ -105,6 +105,8 @@
 
 /* 右ボール = カーソル。公式は sensor_rotation 24°。 */
 &mouse_runtime_input_processor {
+    /* DYA Studio に出る名前 (保存キーも兼ねる、最大 7 文字)。変えると Studio に保存した値は初期値に戻る */
+    processor-label = "Rmouse";
     rotation-degrees = <24>;
 
     /* オートマウス: 右ボールを動かすとレイヤー 13 (AutoMouse) に入る。
@@ -124,6 +126,7 @@
  * ここでは moNa2 で詰めた値 (CPI 600 / 0.40x / 縦横両方) から始める。
  * moNa2 / torabo-tsuki LP と違い active-layers は付けない: 左ボールは常時スクロール。 */
 &scroll_runtime_input_processor {
+    processor-label = "Lscroll";
     x-codes = <INPUT_REL_X>;
     y-codes = <INPUT_REL_Y>;
     xy-to-scroll-enabled;

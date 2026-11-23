@@ -186,12 +186,12 @@
 /* 右ボールのスクロール (レイヤー 5 = Scroll のときだけ)。
  * moNa2 / torabo-tsuki LP と同じく、レイヤー 5 の間だけカーソルをスクロールに変える。
  * 左ボール用の scroll_runtime_input_processor は常時スクロールなので共有せず、
- * 右ボール専用の実体を作る (DYA Studio には "rscroll" として出る)。
+ * 右ボール専用の実体を作る (DYA Studio には "Rscroll" として出る)。
  * 回転 (24°) は手前の mouse_runtime_input_processor が済ませているので 0。 */
 / {
     rscroll_runtime_input_processor: rscroll_runtime_input_processor {
         compatible = "zmk,input-processor-runtime";
-        processor-label = "rscroll";
+        processor-label = "Rscroll";
         type = <INPUT_EV_REL>;
         x-codes = <INPUT_REL_X>;
         y-codes = <INPUT_REL_Y>;
