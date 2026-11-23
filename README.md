@@ -14,7 +14,13 @@
   右ボールもレイヤー 5 (Scroll) の間はスクロールになる (Enter 長押しなど)。
   左ボールはレイヤー 6 (Bluetooth) の間だけ音量ジェスチャーになる
   (上 = 音量アップ / 下 = 音量ダウン / 左 = ミュート / 右 = マイクミュート Win+Alt+K)。
-  公式のオートマウスレイヤーは外した
+- オートマウス: 右ボールを動かすとレイヤー 13 (AutoMouse、クリックだけ) に自動で入る。
+  ボールが止まって 5 秒か、クリック以外のキーを押すと抜ける。値は公式ファームと同じで、
+  DYA Studio の右ボール (mouse) の設定からオン/オフや時間を変えられる
+- 充電ランプ: 充電中だけ、その半分の LED を電池残量の色で光らせる
+  (80% 以上 = 緑 / 20〜80% = 黄 / 20% 未満 = 赤)。小人キーはケースで基板の充電 LED が隠れるため。
+  LisM の [4mplelab/zmk-feature-charge-indicator](https://github.com/4mplelab/zmk-feature-charge-indicator)
+  を `modules/charge-indicator` に同梱している (割り込み内で待っていた箇所だけ直した)
 - ジェスチャー定義は `zmk-dya-common` と共有。hold-tap の実行時調整も入っている
 - モジュールの SHA 固定は `tools/west-pins.py` (使い方は moNa2 の README)
 
@@ -28,13 +34,13 @@
 | ボード名 | `seeeduino_xiao_ble` | `xiao_ble/nrf52840/zmk` |
 | PMW3610 ドライバ | badjeff 版 | cormoran 版 (DYA Studio のセンサータブ対応) |
 | 回転・倍率 | sensor_rotation + scaler (固定) | runtime input processor (Studio で調整可) |
-| キー配列 | QWERTY 4 レイヤー | torabo-tsuki LP 13 レイヤー |
+| キー配列 | QWERTY 4 レイヤー | torabo-tsuki LP 13 レイヤー + オートマウス |
 | 設定ツール | ZMK Studio | DYA Studio |
 | central | 左 | 左 (変更なし) |
 
 ## キーマップ
 
-全 13 レイヤーとコンボの図。`config/KobitoKey.keymap` を push すると GitHub Actions
+全 14 レイヤーとコンボの図。`config/KobitoKey.keymap` を push すると GitHub Actions
 (`.github/workflows/draw.yml`) が作り直して、同じブランチへ自動でコミットする。
 
 ![KobitoKey のキーマップ](keymap-drawer/KobitoKey.svg)

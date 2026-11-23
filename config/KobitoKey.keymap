@@ -340,5 +340,21 @@
 &trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans  &trans
             >;
         };
+
+        /* index 13: オートマウス (右ボールを動かすと自動で入る)。
+         * 入り方・抜け方は boards/shields/KobitoKey/kobitokey.dtsi の
+         * mouse_runtime_input_processor (temp-layer-*) で決めている。DYA Studio でも変えられる。
+         * クリックは Mouse レイヤー (4) と同じ位置。それ以外は &trans にしておくこと:
+         * &trans のキー (修飾キーを除く) を押すとこのレイヤーから抜け、押した文字はそのまま出る。
+         * &trans 以外を置いたキーは押しても抜けない (Mouse レイヤーに自動で入らないのはこのため)。 */
+        auto_mouse {
+            display-name = "AutoMouse";
+            bindings = <
+&trans  &trans  &trans  &trans  &trans      &trans    &trans    &trans    &trans    &trans
+&trans  &trans  &trans  &trans  &trans      &mkp MB5  &trans    &trans    &trans    &mkp MB5
+&trans  &trans  &trans  &trans  &trans      &mkp MB4  &mkp MB1  &mkp MB3  &mkp MB2  &mkp MB4
+&trans  &trans  &trans  &trans  &trans      &trans    &trans    &trans    &trans    &trans
+            >;
+        };
     };
 };
