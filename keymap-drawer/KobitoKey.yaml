@@ -180,11 +180,11 @@ layers:
   - '5'
   - {t: '6', type: held}
   - KP MINUS
-  - {t: AC BACK, h: Back}
+  - AC BACK
   - {t: Mouse, h: L Click}
   - {t: Mouse, h: M Click}
   - {t: Mouse, h: R Click}
-  - {t: AC FORWARD, h: Fwd}
+  - AC FORWARD
   - '0'
   - '1'
   - '2'
@@ -549,11 +549,11 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - {t: AC BACK, h: Back}
+  - AC BACK
   - {t: Mouse, h: L Click}
   - {t: Mouse, h: M Click}
   - {t: Mouse, h: R Click}
-  - {t: AC FORWARD, h: Fwd}
+  - AC FORWARD
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
