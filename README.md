@@ -11,7 +11,21 @@
 - キー配列は torabo-tsuki LP ([Daytona0306/zmk-keyboard-torabo-tsuki-lp](https://github.com/Daytona0306/zmk-keyboard-torabo-tsuki-lp))
   の移植。13 レイヤーでレイヤー番号も同じ (下の「配列」を参照)
 - 左ボール = 常時スクロール (スナップ + 慣性)、右ボール = カーソル + ジェスチャー。
-  公式のオートマウスレイヤーは外した
+  右ボールもレイヤー 5 (Scroll) の間はスクロールになる (Enter 長押しなど)。
+  左ボールはレイヤー 4 (Mouse) の間はカーソル、レイヤー 6 (Bluetooth) の間は音量ジェスチャーになる
+  (上 = 音量アップ / 下 = 音量ダウン / 左 = ミュート / 右 = マイクミュート Win+Alt+K)。
+  ミュート 2 つは誤操作しないよう、大きく転がさないと反応しない。
+- ウィンドウ切り替え: U と `,` の同時押しで Ctrl+Alt+Tab の切り替え画面が開き、押している間は
+  左ボールで選択を動かせる。離すと選んだウィンドウに切り替わる。
+- オートマウス: 右ボールを動かすとレイヤー 13 (AutoMouse、クリックだけ) に自動で入る。
+  クリックは右手中段の T N S (左・中・右、Mouse レイヤーと同じ位置)。。
+  ボールが止まって 5 秒か、クリック以外のキーを押すと抜ける。値は公式ファームと同じで、
+  DYA Studio の `Rmouse` の「一時レイヤー」からオン/オフや時間を変えられる
+- 充電ランプ: 充電中だけ、その半分の LED を電池残量の色で光らせる
+  (80% 以上 = 緑 / 20〜80% = 黄 / 20% 未満 = 赤)。左はベース (と iPad) レイヤーのときだけで、
+  ほかのレイヤーにいる間はレイヤーの色を出す。小人キーはケースで基板の充電 LED が隠れるため。
+  LisM の [4mplelab/zmk-feature-charge-indicator](https://github.com/4mplelab/zmk-feature-charge-indicator)
+  を `modules/charge-indicator` に同梱している (割り込み内で待っていた箇所だけ直した)
 - ジェスチャー定義は `zmk-dya-common` と共有。hold-tap の実行時調整も入っている
 - モジュールの SHA 固定は `tools/west-pins.py` (使い方は moNa2 の README)
 
@@ -25,13 +39,24 @@
 | ボード名 | `seeeduino_xiao_ble` | `xiao_ble/nrf52840/zmk` |
 | PMW3610 ドライバ | badjeff 版 | cormoran 版 (DYA Studio のセンサータブ対応) |
 | 回転・倍率 | sensor_rotation + scaler (固定) | runtime input processor (Studio で調整可) |
-| キー配列 | QWERTY 4 レイヤー | torabo-tsuki LP 13 レイヤー |
+| キー配列 | QWERTY 4 レイヤー | torabo-tsuki LP 13 レイヤー + オートマウス |
 | 設定ツール | ZMK Studio | DYA Studio |
 | central | 左 | 左 (変更なし) |
 
+## DYA Studio のトラックボール設定
+
+| Studio の名前 | 効くもの | いつ |
+|---|---|---|
+| `Rmouse` | 右ボールのカーソル (オートマウスの設定もここ) | 常に |
+| `Lmouse` | 左ボールのカーソル | レイヤー 4 (Mouse) のときだけ |
+| `Lscroll` | 左ボールのスクロール | 4 (Mouse)・6 (音量ジェスチャー)・14 (ウィンドウ切り替え) 以外のとき |
+| `Rscroll` | 右ボールのスクロール | レイヤー 5 (Scroll) のときだけ |
+
+名前は保存キーも兼ねていて最大 7 文字。名前を変えると、Studio に保存した値はファイルの初期値に戻る。
+
 ## キーマップ
 
-全 13 レイヤーとコンボの図。`config/KobitoKey.keymap` を push すると GitHub Actions
+全 15 レイヤーとコンボの図。`config/KobitoKey.keymap` を push すると GitHub Actions
 (`.github/workflows/draw.yml`) が作り直して、同じブランチへ自動でコミットする。
 
 ![KobitoKey のキーマップ](keymap-drawer/KobitoKey.svg)
@@ -85,15 +110,15 @@
 
 | 位置 | 30 | 31 | 32 | 33 | 34 | 35 | 36 | 37 | 38 | 39 |
 |---|---|---|---|---|---|---|---|---|---|---|
-| タップ | Alt | GUI | 無変換 | Enter | BS | Del | Space | 変換 | Ctrl+F13 | Tab |
-| ホールド | | | Shift | L5 (Scroll) | Ctrl | L3 (SYM2) | L2 (NUM/SYM1) | Shift | | |
+| タップ | Alt | GUI | 無変換 | Enter | BS | Del | Space | Tab | Ctrl+F13 | 変換 |
+| ホールド | | | Shift | L5 (Scroll) | Ctrl | L3 (SYM2) | L2 (NUM/SYM1) | 右 Ctrl | | 右 Shift |
 
 torabo-tsuki LP から変えた点:
 
 - 外周・数字段・中央の追加キー、4方向スイッチ / ダイヤルは小人キーに無いので落とした
-- Tab は torabo では左親指 (GUI の内側) だが、小人キーは親指キーが足りないので右端 (位置 39) へ移した。コンボ (E+I) でも出せる
-- 右親指は torabo の「Space / 空き / 空き / Ctrl+F13 / 変換」を詰め、変換を Space の隣 (37)、Ctrl+F13 を 38 にした
-- 置き場所が無くて落としたキー: ベースの `&kp LA(LG(K))`、SYM2 の `&kp LG(LA(U))`
+- Tab は torabo では左親指 (GUI の内側) だが、小人キーは右親指の内側 (位置 37、長押しで右 Ctrl) に置いた。コンボ (E+I) でも出せる
+- 変換はほとんど使わないので右端 (位置 39、長押しで右 Shift) にした
+- 置き場所が無くて落としたキー: SYM2 の `&kp LG(LA(U))`。ベースの `&kp LA(LG(K))` は Mouse レイヤーの G の位置に移した
 - iPad レイヤー (1) とレイヤー 2〜12 の最下段は、上の対応に合わせて同じ位置へ移した
 
 以下は公式の README。

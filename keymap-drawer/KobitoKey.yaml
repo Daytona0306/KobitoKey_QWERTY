@@ -20,7 +20,7 @@ layers:
   - T
   - {t: N, h: 'Gest: Arrow'}
   - S
-  - H
+  - {t: H, h: Mouse}
   - {t: Z, h: LEFT SHIFT}
   - X
   - C
@@ -38,9 +38,9 @@ layers:
   - {t: BACKSPACE, h: LEFT CONTROL}
   - {t: DEL, h: SYM2}
   - {t: SPACE, h: NUM/SYM1}
-  - {t: INT HENKAN, h: RIGHT SHIFT}
+  - {t: TAB, h: RIGHT CONTROL}
   - Ctl+F13
-  - TAB
+  - {t: INT HENKAN, h: RIGHT SHIFT}
   iPad:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -79,9 +79,9 @@ layers:
   - {t: BACKSPACE, h: LEFT GUI}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
+  - {t: TAB, h: RIGHT GUI}
+  - {t: ▽, type: trans}
   - {t: LANG1, h: RIGHT SHIFT}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
   NUM/SYM1:
   - '1'
   - '2'
@@ -148,7 +148,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: Brows, h: Explorer}
-  - {t: Macro, h: rec/play}
+  - '&rmacro 1'
   - Ctl+Gui+LEFT ARROW
   - Ctl+Gui+RIGHT ARROW
   - Alt+Ctl+Gui+D
@@ -169,37 +169,37 @@ layers:
   - '7'
   - '8'
   - '9'
+  - '['
+  - Alt+Gui+K
+  - {t: ▽, type: trans}
+  - Scroll
   - {t: ▽, type: trans}
   - MUTE
-  - VOL DN
-  - VOLUME UP
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
   - '='
   - '4'
   - '5'
   - {t: '6', type: held}
   - KP MINUS
-  - {t: Mouse, h: Fwd}
-  - {t: ▽, type: trans}
-  - Scroll
-  - {t: ▽, type: trans}
-  - {t: Mouse, h: Fwd}
+  - ''
+  - {t: Mouse, h: L Click}
+  - {t: Mouse, h: M Click}
+  - {t: Mouse, h: R Click}
+  - ''
   - '0'
   - '1'
   - '2'
   - '3'
   - KP PLUS
-  - {t: Mouse, h: Back}
+  - VOL DN
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - VOL UP
+  - .
+  - ','
   - {t: Mouse, h: L Click}
   - {t: Mouse, h: M Click}
   - {t: Mouse, h: R Click}
-  - {t: Mouse, h: Back}
-  - .
-  - ','
-  - '['
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: Base (Win), h: toggle}
@@ -533,6 +533,88 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
+  AutoMouse:
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - ''
+  - {t: Mouse, h: L Click}
+  - {t: Mouse, h: M Click}
+  - {t: Mouse, h: R Click}
+  - ''
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  Switcher:
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
 combos:
 - p: [10, 11]
   k: TAB
@@ -551,4 +633,4 @@ combos:
 - p: [27, 28]
   k: Scroll
 - p: [2, 3]
-  k: Alt+Ctl+TAB
+  k: '&win_switcher'

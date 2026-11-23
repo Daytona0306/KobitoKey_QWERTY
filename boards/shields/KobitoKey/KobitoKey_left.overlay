@@ -98,6 +98,85 @@
     };
 };
 
+/* 左ボールの音量ジェスチャー (レイヤー 6 = Bluetooth のときだけ)。
+ *   上 = 音量アップ / 下 = 音量ダウン / 左 = ミュート / 右 = マイクミュート (Win+Alt+K)
+ * 音量 (上下) とミュート (左右) で感度を分けるため、プロセッサを 2 つにしている。
+ *   - 音量: 軽く転がすだけで反応し、転がし続けると stroke-size ごとに繰り返す (eager)
+ *   - ミュート: 大きく転がさないと反応しない。連続で切り替わらないよう cooldown も長い
+ * どちらも全方向の動きを受け取るが、自分の担当外の方向は何もせず捨てる。
+ * gesture-cooldown-ms が連打の間隔の下限。
+ * RPC が書き換えるのは DT インスタンス 0 番 (&mg) だけなので、&mg より後に定義する。 */
+/ {
+    vol_gest_proc: vol_gest_proc {
+        compatible = "zmk,input-processor-mouse-gesture";
+        #input-processor-cells = <0>;
+        enable-eager-mode;
+        always-active;
+        stroke-size = <20>;
+        movement-threshold = <4>;
+        idle-timeout-ms = <100>;
+        gesture-cooldown-ms = <150>;
+
+        up    { pattern = <GESTURE_UP>;    bindings = <&kp C_VOL_UP>; };
+        down  { pattern = <GESTURE_DOWN>;  bindings = <&kp C_VOL_DN>; };
+    };
+
+    mute_gest_proc: mute_gest_proc {
+        compatible = "zmk,input-processor-mouse-gesture";
+        #input-processor-cells = <0>;
+        enable-eager-mode;
+        always-active;
+        stroke-size = <60>;          /* 音量の 3 倍。ちょっと触っただけでは切り替わらない */
+        movement-threshold = <6>;
+        idle-timeout-ms = <100>;
+        gesture-cooldown-ms = <700>; /* 一度切り替えたら 0.7 秒は次を受け付けない */
+
+        left  { pattern = <GESTURE_LEFT>;  bindings = <&kp C_MUTE>; };
+        right { pattern = <GESTURE_RIGHT>; bindings = <&kp LG(LA(K))>; };
+    };
+
+    /* ウィンドウ切り替え中 (レイヤー 14、Ctrl+Alt+Tab コンボを押している間) の選択移動。
+     * 上下左右 = 矢印キー。転がし続けると stroke-size ごとに 1 つずつ進む。 */
+    switcher_gest_proc: switcher_gest_proc {
+        compatible = "zmk,input-processor-mouse-gesture";
+        #input-processor-cells = <0>;
+        enable-eager-mode;
+        always-active;
+        stroke-size = <25>;
+        movement-threshold = <4>;
+        idle-timeout-ms = <100>;
+        gesture-cooldown-ms = <120>;
+
+        up    { pattern = <GESTURE_UP>;    bindings = <&kp UP>; };
+        down  { pattern = <GESTURE_DOWN>;  bindings = <&kp DOWN>; };
+        left  { pattern = <GESTURE_LEFT>;  bindings = <&kp LEFT>; };
+        right { pattern = <GESTURE_RIGHT>; bindings = <&kp RIGHT>; };
+    };
+};
+
+/* 左ボールのカーソル (レイヤー 4 = Mouse のときだけ)。DYA Studio には "Lmouse" として出る。
+ * 回転は Lscroll と同じ -24° (左ボールの取り付け角度)。ドライバの反転で REL_X/Y は
+ * カーソルと同じ向きになっているので、軸の反転は要らない。 */
+/ {
+    lmouse_runtime_input_processor: lmouse_runtime_input_processor {
+        compatible = "zmk,input-processor-runtime";
+        processor-label = "Lmouse";
+        type = <INPUT_EV_REL>;
+        x-codes = <INPUT_REL_X>;
+        y-codes = <INPUT_REL_Y>;
+        scale-multiplier = <1>;
+        scale-divisor = <1>;
+        rotation-degrees = <(-24)>;
+        track-remainders;
+
+        temp-layer-transparent-behavior = <&trans>;
+        temp-layer-kp-behavior = <&kp>;
+        temp-layer-keep-keycodes = <LEFT_CONTROL LEFT_SHIFT LEFT_ALT LEFT_GUI RIGHT_CONTROL RIGHT_SHIFT RIGHT_ALT RIGHT_GUI>;
+
+        #input-processor-cells = <0>;
+    };
+};
+
 /* 左ボール: 常時スクロール (+ スナップ + 慣性) */
 &tb_left_listener {
     status = "okay";
@@ -106,6 +185,105 @@
         <&scroll_runtime_input_processor>,
         <&zip_scroll_snap>,
         <&scroll_inertia_free>;
+
+    /* レイヤー 6 の間はスクロールの代わりに音量ジェスチャー。
+     * ドライバの反転で REL_X/Y はカーソルと同じ向き (右 = +X、手前 = +Y) なので
+     * 軸変換は不要。最後の scaler で X/Y を 0 にして、カーソルが動かないようにする。 */
+    route_vol_gest {
+        layers = <6>;
+        input-processors =
+            <&vol_gest_proc>,
+            <&mute_gest_proc>,
+            <&zip_xy_scaler 0 1>;
+    };
+
+    /* レイヤー 14 (Ctrl+Alt+Tab コンボを押している間) は切り替え画面の選択移動。 */
+    route_switcher {
+        layers = <14>;
+        input-processors =
+            <&switcher_gest_proc>,
+            <&zip_xy_scaler 0 1>;
+    };
+
+    /* レイヤー 4 (Mouse) の間は左ボールもカーソル (Lmouse)。スクロールはしない。
+     * 子ノードは書いた順に判定されるので、6 と 14 (上) が同時に有効ならそちらが勝つ。 */
+    route_lmouse {
+        layers = <4>;
+        input-processors = <&lmouse_runtime_input_processor>;
+    };
+};
+
+/* 右ボールのスクロール (レイヤー 5 = Scroll のときだけ)。
+ * moNa2 / torabo-tsuki LP と同じく、レイヤー 5 の間だけカーソルをスクロールに変える。
+ * 左ボール用の scroll_runtime_input_processor は常時スクロールなので共有せず、
+ * 右ボール専用の実体を作る (DYA Studio には "Rscroll" として出る)。
+ * 回転 (24°) は手前の mouse_runtime_input_processor が済ませているので 0。 */
+/ {
+    rscroll_runtime_input_processor: rscroll_runtime_input_processor {
+        compatible = "zmk,input-processor-runtime";
+        processor-label = "Rscroll";
+        type = <INPUT_EV_REL>;
+        x-codes = <INPUT_REL_X>;
+        y-codes = <INPUT_REL_Y>;
+        xy-to-scroll-enabled;
+        active-layers = <(1 << 5)>;
+        /* 左ボールと同じ 0.40x から始める。右は CPI 600 で左と同じ。 */
+        scale-multiplier = <2>;
+        scale-divisor = <5>;
+        rotation-degrees = <0>;
+        track-remainders;
+        /* 正の WHEEL = 上スクロール、正の REL_Y = カーソル下なので縦だけ反転 (左と同じ)。 */
+        y-invert;
+
+        temp-layer-transparent-behavior = <&trans>;
+        temp-layer-kp-behavior = <&kp>;
+        temp-layer-keep-keycodes = <LEFT_CONTROL LEFT_SHIFT LEFT_ALT LEFT_GUI RIGHT_CONTROL RIGHT_SHIFT RIGHT_ALT RIGHT_GUI>;
+
+        #input-processor-cells = <0>;
+    };
+
+    /* スナップ: zip_scroll_snap と同じ値。状態を左ボールと分けるため別の実体にする。
+     * WHEEL / HWHEEL にしか作用しないので、レイヤー 5 以外のカーソルには影響しない。 */
+    zip_scroll_snap_r: zip_scroll_snap_r {
+        compatible = "zmk,input-processor-scroll-snap";
+        #input-processor-cells = <0>;
+        x-threshold = <5 8>;
+        y-threshold = <1 1>;
+        xy-threshold = <0 0>;
+        require-n-samples = <10>;
+        immediate-snap-threshold = <1500>;
+        lock-duration-ms = <200>;
+        lock-for-next-n-events = <10>;
+        idle-reset-timeout-ms = <200>;
+        track-remainders;
+    };
+
+    /* 慣性: 値は左 (scroll_inertia_free) と同じ。layer = 5 でレイヤー連動にする
+     * (moNa2 と同じ形。レイヤーを抜けると惰性も止まる)。 */
+    scroll_inertia_r: scroll_inertia_r {
+        compatible = "zmk,input-processor-scroll-inertia";
+        #input-processor-cells = <0>;
+        axis      = <0>;
+        layer     = <5>;
+        scale     = <1000>;
+        scale-div = <1000>;
+        tick = <17>;
+        release = <51>;
+        start = <30>;
+        move = <45>;
+        min-events = <6>;
+        gain = <300>;
+        blend = <700>;
+        friction = <25>;
+        limit = <900>;
+        stop = <1>;
+        span = <12000>;
+        fast = <250>;
+        decay-fast = <996>;
+        decay-slow = <985>;
+        slow = <60>;
+        decay-tail = <982>;
+    };
 };
 
 /* 右ボール (split 経由): カーソル。
@@ -117,5 +295,8 @@
     status = "okay";
     input-processors =
         <&mg>,
-        <&mouse_runtime_input_processor>;
+        <&mouse_runtime_input_processor>,
+        <&rscroll_runtime_input_processor>,
+        <&zip_scroll_snap_r>,
+        <&scroll_inertia_r>;
 };

@@ -57,6 +57,15 @@
         };
     };
 
+    /* 充電状態 (左右とも)。XIAO nRF52840 の充電 IC の STAT が P0.17 につながっていて、
+     * 充電中は Low になる。modules/charge-indicator がこれを読み、充電中だけ
+     * レイヤー表示の LED を電池残量の色で光らせる (小人キーは基板の充電 LED が見えないため)。 */
+    chg_stat: chg_stat {
+        compatible = "custom,chg-stat";
+        gpios = <&gpio0 17 GPIO_ACTIVE_LOW>;
+        status = "okay";
+    };
+
     /* リスナー（中央で有効化。周辺から来た入力もここで処理） */
     tb_left_listener: tb_left_listener {
         compatible = "zmk,input-listener";
@@ -96,13 +105,28 @@
 
 /* 右ボール = カーソル。公式は sensor_rotation 24°。 */
 &mouse_runtime_input_processor {
+    /* DYA Studio に出る名前 (保存キーも兼ねる、最大 7 文字)。変えると Studio に保存した値は初期値に戻る */
+    processor-label = "Rmouse";
     rotation-degrees = <24>;
+
+    /* オートマウス: 右ボールを動かすとレイヤー 13 (AutoMouse) に入る。
+     * 値は公式ファーム (zip_temp_layer) と同じ:
+     *   - キーを押してから 350ms 以内はボールが動いても入らない (誤爆防止)
+     *   - ボールが止まってから 5 秒で抜ける
+     *   - AutoMouse レイヤーで &trans のキーを押すと即抜ける (修飾キーは除く)
+     * オン/オフ・レイヤー・時間は DYA Studio で変えられる (Flash に保存)。
+     * settings_reset するとここの値に戻る。 */
+    temp-layer-enabled;
+    temp-layer = <13>;
+    temp-layer-activation-delay-ms = <350>;
+    temp-layer-deactivation-delay-ms = <5000>;
 };
 
 /* 左ボール = スクロール。公式は sensor_rotation -24°、縦のみ・1/15。
  * ここでは moNa2 で詰めた値 (CPI 600 / 0.40x / 縦横両方) から始める。
  * moNa2 / torabo-tsuki LP と違い active-layers は付けない: 左ボールは常時スクロール。 */
 &scroll_runtime_input_processor {
+    processor-label = "Lscroll";
     x-codes = <INPUT_REL_X>;
     y-codes = <INPUT_REL_Y>;
     xy-to-scroll-enabled;
