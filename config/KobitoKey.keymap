@@ -277,7 +277,7 @@
             display-name = "Mouse";
             bindings = <
 &kp ESCAPE  &kp N7     &kp N8    &kp N9    &kp LBKT          &kp LA(LG(K))  &trans    &mo 5     &trans    &kp C_MUTE
-&kp EQUAL   &kp N4     &kp N5    &kp N6    &kp KP_MINUS      &kp NONE       &mkp MB1  &mkp MB3  &mkp MB2  &kp NONE
+&kp EQUAL   &kp N4     &kp N5    &kp N6    &kp KP_MINUS      &none           &mkp MB1  &mkp MB3  &mkp MB2  &none
 &kp N0      &kp N1     &kp N2    &kp N3    &kp KP_PLUS       &kp C_VOL_DN   &trans    &trans    &trans    &kp C_VOL_UP
 &kp DOT     &kp COMMA  &mkp MB1  &mkp MB3  &mkp MB2          &trans         &trans    &to 0     &to 0     &trans
             >;
@@ -366,7 +366,7 @@
         /* index 13: オートマウス (右ボールを動かすと自動で入る)。
          * 入り方・抜け方は boards/shields/KobitoKey/kobitokey.dtsi の
          * mouse_runtime_input_processor (temp-layer-*) で決めている。DYA Studio でも変えられる。
-         * クリックは右手中段 T N S (左・中・右、Mouse レイヤー (4) と同じ位置)。K と H は &kp NONE。
+         * クリックは右手中段 T N S (左・中・右、Mouse レイヤー (4) と同じ位置)。K と H は &none (何も出さない)。
          * 左親指 (無変換・Enter・BS) には置かない: 置くと選択後の BS などがクリックに化け、レイヤーからも抜けない。
          * それ以外は &trans にしておくこと:
          * &trans のキー (修飾キーを除く) を押すとこのレイヤーから抜け、押した文字はそのまま出る。
@@ -375,7 +375,7 @@
             display-name = "AutoMouse";
             bindings = <
 &trans  &trans  &trans  &trans  &trans      &trans    &trans    &trans    &trans    &trans
-&trans  &trans  &trans  &trans  &trans      &kp NONE  &mkp MB1  &mkp MB3  &mkp MB2  &kp NONE
+&trans  &trans  &trans  &trans  &trans      &none      &mkp MB1  &mkp MB3  &mkp MB2  &none
 &trans  &trans  &trans  &trans  &trans      &trans    &trans    &trans    &trans    &trans
 &trans  &trans  &trans  &trans  &trans      &trans    &trans    &trans    &trans    &trans
             >;
