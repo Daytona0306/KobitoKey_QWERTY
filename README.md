@@ -70,7 +70,6 @@
 | `kobitokey_left` | 左 (central、DYA Studio は USB でこちらにつなぐ) |
 | `kobitokey_right` | 右 (peripheral) |
 | `kobitokey_reset` | 設定リセット (左右それぞれに焼く) |
-| `kobitokey_right_log` | 調査用。右を USB につなぐとシリアルでログが見られる。普段は使わない |
 
 1. 組み立て直後で動作が不安なら、先に公式ファーム ([`original-main`](../../tree/original-main)) を焼いて
    全キーと両ボールが動くことを見る。ハードの不良とこのファームの不具合を切り分けるため
