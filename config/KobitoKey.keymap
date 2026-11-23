@@ -344,7 +344,8 @@
         /* index 13: オートマウス (右ボールを動かすと自動で入る)。
          * 入り方・抜け方は boards/shields/KobitoKey/kobitokey.dtsi の
          * mouse_runtime_input_processor (temp-layer-*) で決めている。DYA Studio でも変えられる。
-         * クリック (戻る・進む含む) は Mouse レイヤー (4) と同じ位置: 右手中段 K T N S H と左親指 3 つ。
+         * クリック (戻る・進む含む) は右手中段 K T N S H だけ (Mouse レイヤー (4) と同じ位置)。
+         * 左親指 (無変換・Enter・BS) には置かない: 置くと選択後の BS などがクリックに化け、レイヤーからも抜けない。
          * 戻る・進むはマウスボタン (MB4/MB5) ではなくキーボードの C_AC_BACK / C_AC_FORWARD。
          * MB4/MB5 は PC 側のジェスチャーソフトに割り当てていて、別の操作になるため。
          * それ以外は &trans にしておくこと:
@@ -353,10 +354,10 @@
         auto_mouse {
             display-name = "AutoMouse";
             bindings = <
-&trans  &trans  &trans    &trans    &trans        &trans         &trans    &trans    &trans    &trans
-&trans  &trans  &trans    &trans    &trans        &kp C_AC_BACK  &mkp MB1  &mkp MB3  &mkp MB2  &kp C_AC_FORWARD
-&trans  &trans  &trans    &trans    &trans        &trans         &trans    &trans    &trans    &trans
-&trans  &trans  &mkp MB1  &mkp MB3  &mkp MB2      &trans         &trans    &trans    &trans    &trans
+&trans  &trans  &trans  &trans  &trans      &trans         &trans    &trans    &trans    &trans
+&trans  &trans  &trans  &trans  &trans      &kp C_AC_BACK  &mkp MB1  &mkp MB3  &mkp MB2  &kp C_AC_FORWARD
+&trans  &trans  &trans  &trans  &trans      &trans         &trans    &trans    &trans    &trans
+&trans  &trans  &trans  &trans  &trans      &trans         &trans    &trans    &trans    &trans
             >;
         };
     };
