@@ -180,11 +180,11 @@ layers:
   - '5'
   - {t: '6', type: held}
   - KP MINUS
-  - ''
+  - AC BACK
   - {t: Mouse, h: L Click}
   - {t: Mouse, h: M Click}
   - {t: Mouse, h: R Click}
-  - ''
+  - AC FORWARD
   - '0'
   - '1'
   - '2'
