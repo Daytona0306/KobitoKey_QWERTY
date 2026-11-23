@@ -20,7 +20,8 @@
   ボールが止まって 5 秒か、クリック以外のキーを押すと抜ける。値は公式ファームと同じで、
   DYA Studio の右ボール (mouse) の設定からオン/オフや時間を変えられる
 - 充電ランプ: 充電中だけ、その半分の LED を電池残量の色で光らせる
-  (80% 以上 = 緑 / 20〜80% = 黄 / 20% 未満 = 赤)。小人キーはケースで基板の充電 LED が隠れるため。
+  (80% 以上 = 緑 / 20〜80% = 黄 / 20% 未満 = 赤)。左はベース (と iPad) レイヤーのときだけで、
+  ほかのレイヤーにいる間はレイヤーの色を出す。小人キーはケースで基板の充電 LED が隠れるため。
   LisM の [4mplelab/zmk-feature-charge-indicator](https://github.com/4mplelab/zmk-feature-charge-indicator)
   を `modules/charge-indicator` に同梱している (割り込み内で待っていた箇所だけ直した)
 - ジェスチャー定義は `zmk-dya-common` と共有。hold-tap の実行時調整も入っている

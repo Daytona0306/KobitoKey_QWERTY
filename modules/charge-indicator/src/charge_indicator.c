@@ -2,6 +2,8 @@
 // - GPIO 割り込みハンドラの中で k_sleep していたのを、遅延ワークに移した。
 //   割り込みの中では待てない (割り込まれたスレッドが代わりに止まる) ため。
 // - battery_pct を int で受ける (uint8_t だと範囲外判定が効かない)。
+// - CONFIG_CHG_SHOW_MAX_LAYER: 充電色を出すのは、いちばん上の有効レイヤーがこの番号以下の
+//   ときだけ (central のみ)。それより上のレイヤーにいる間は rgbled-widget のレイヤー色を出す。
 //
 // src/charge_indicator.c
 //
@@ -21,6 +23,17 @@
 #include <zmk/battery.h>
 #include <zmk/event_manager.h>
 #include <zmk/events/battery_state_changed.h>
+
+/* レイヤー情報は central (または非分割) にしか無い。peripheral では常に充電色を出す。 */
+#define CHG_HAS_LAYERS (!IS_ENABLED(CONFIG_ZMK_SPLIT) || IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL))
+#if CHG_HAS_LAYERS
+#include <zmk/keymap.h>
+#include <zmk/events/layer_state_changed.h>
+#endif
+#if CHG_HAS_LAYERS && IS_ENABLED(CONFIG_RGBLED_WIDGET_SHOW_LAYER_COLORS)
+/* rgbled-widget が今出しているレイヤー色 (widget.c のグローバル)。充電色をやめるときに戻す。 */
+extern uint8_t led_layer_color;
+#endif
 
 LOG_MODULE_REGISTER(charge_indicator, CONFIG_ZMK_LOG_LEVEL);
 
@@ -137,10 +150,43 @@ static inline bool read_charging(void) {
     return raw == 0;
 }
 
+/* 充電色を出してよいか: いちばん上の有効レイヤーが CONFIG_CHG_SHOW_MAX_LAYER 以下のときだけ。 */
+static bool charge_display_allowed(void)
+{
+#if CHG_HAS_LAYERS
+    return zmk_keymap_highest_layer_active() <= CONFIG_CHG_SHOW_MAX_LAYER;
+#else
+    return true;
+#endif
+}
+
+/* 直前に充電色を出していたか (レイヤー色へ戻すタイミングの判定用)。 */
+static atomic_t charge_shown = ATOMIC_INIT(false);
+
+/* 充電色をやめて、widget のレイヤー色 (無ければ消灯) に戻す。 */
+static void restore_widget_color(void)
+{
+#ifndef CHARGE_INDICATOR_DISABLE_LED
+#if CHG_HAS_LAYERS && IS_ENABLED(CONFIG_RGBLED_WIDGET_SHOW_LAYER_COLORS)
+    apply_color_code(led_layer_color);
+#else
+    apply_color_code(0);
+#endif
+#endif
+}
+
 /* Apply LED behavior according to charging state and policy. */
 static void apply_charging_color(bool charging)
 {
 #ifndef CHARGE_INDICATOR_DISABLE_LED
+    if (charging && !charge_display_allowed()) {
+        /* 上のレイヤーにいる間はレイヤー色を優先する。充電色を出していたら一度だけ戻す。 */
+        if (atomic_set(&charge_shown, false)) {
+            restore_widget_color();
+        }
+        return;
+    }
+    bool was_shown = atomic_set(&charge_shown, charging);
     if (charging) {
 #if IS_ENABLED(CONFIG_CHG_POLICY)
         /* Charging: force LEDs OFF, fully suppress widget output. */
@@ -156,9 +202,9 @@ static void apply_charging_color(bool charging)
         apply_color_code(CONFIG_CHG_COLOR);
 #endif
 #endif
-    } else {
-        /* Not charging: keep LEDs OFF and fully delegate to rgbled_widget/others. */
-        led_red(false); led_green(false); led_blue(false);
+    } else if (was_shown) {
+        /* Not charging: hand the LED back to rgbled_widget (restore its layer color). */
+        restore_widget_color();
     }
 #else
     ARG_UNUSED(charging);
@@ -203,6 +249,30 @@ static int battery_state_changed_listener(const zmk_event_t *eh)
 
 ZMK_LISTENER(charge_indicator, battery_state_changed_listener);
 ZMK_SUBSCRIPTION(charge_indicator, zmk_battery_state_changed);
+
+#if CHG_HAS_LAYERS
+/* レイヤーが変わったら、widget が色を更新し終えた後で充電色を出す/やめるを決め直す。 */
+static void chg_layer_work_handler(struct k_work *work)
+{
+    ARG_UNUSED(work);
+    if (atomic_get(&is_charging)) {
+        apply_charging_color(true);
+    }
+}
+
+static K_WORK_DELAYABLE_DEFINE(chg_layer_work, chg_layer_work_handler);
+
+static int chg_layer_state_listener(const zmk_event_t *eh)
+{
+    if (as_zmk_layer_state_changed(eh) != NULL && atomic_get(&is_charging)) {
+        k_work_reschedule(&chg_layer_work, K_MSEC(30));
+    }
+    return ZMK_EV_EVENT_BUBBLE;
+}
+
+ZMK_LISTENER(charge_indicator_layer, chg_layer_state_listener);
+ZMK_SUBSCRIPTION(charge_indicator_layer, zmk_layer_state_changed);
+#endif
 
 /* Maintenance thread:
  * - While charging: periodically reapply to suppress widget (prevent short blinks).

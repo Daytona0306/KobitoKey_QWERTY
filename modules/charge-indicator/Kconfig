@@ -11,6 +11,14 @@ config CHG_POLICY
       y: While charging, force LEDs OFF and suppress widget output.
       n: While charging, show selected color (CHG_COLOR) and suppress widget output.
 
+config CHG_SHOW_MAX_LAYER
+    int "Show the charging color only while the highest active layer is at or below this index"
+    default 31
+    help
+      Central (or non-split) only. While a higher layer is active, the
+      rgbled-widget layer color is shown instead of the charging color.
+      Peripherals have no layer information and always show the charging color.
+
 config CHG_COLOR
     int "Charging color value (0-7)"
     range 0 7
