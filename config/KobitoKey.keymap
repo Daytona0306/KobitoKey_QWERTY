@@ -233,10 +233,10 @@
         default_layer {
             display-name = "Base (Win)";
             bindings = <
-&lt 12 Q          &lt 9 L   &lt 11 U                     &lt 8 COMMA  &lt 10 PERIOD                   &kp F      &kp W        &kp R                       &kp Y            &kp P
-&mt LCTRL E       &kp I     &lt 7 A                      &lt 4 O      &kp MINUS                       &kp K      &kp T        &lt 7 N                     &kp S            &lt 4 H
-&mt LEFT_SHIFT Z  &kp X     &kp C                        &kp V        &kp SEMICOLON                   &kp G      &kp D        &kp M                       &mt RIGHT_ALT J  &lt 4 B
-&kp LEFT_ALT      &kp LGUI  &mt LEFT_SHIFT INT_MUHENKAN  &lt 5 ENTER  &mt LEFT_CONTROL BACKSPACE      &lt 3 DEL  &lt 2 SPACE  &mt RIGHT_SHIFT INT_HENKAN  &kp LC(F13)      &kp TAB
+&lt 12 Q          &lt 9 L   &lt 11 U                     &lt 8 COMMA  &lt 10 PERIOD                   &kp F      &kp W        &kp R                  &kp Y            &kp P
+&mt LCTRL E       &kp I     &lt 7 A                      &lt 4 O      &kp MINUS                       &kp K      &kp T        &lt 7 N                &kp S            &lt 4 H
+&mt LEFT_SHIFT Z  &kp X     &kp C                        &kp V        &kp SEMICOLON                   &kp G      &kp D        &kp M                  &mt RIGHT_ALT J  &lt 4 B
+&kp LEFT_ALT      &kp LGUI  &mt LEFT_SHIFT INT_MUHENKAN  &lt 5 ENTER  &mt LEFT_CONTROL BACKSPACE      &lt 3 DEL  &lt 2 SPACE  &mt RIGHT_CONTROL TAB  &kp LC(F13)      &mt RIGHT_SHIFT INT_HENKAN
             >;
         };
 
@@ -276,10 +276,10 @@
         MOUSE {
             display-name = "Mouse";
             bindings = <
-&kp ESCAPE  &kp N7     &kp N8    &kp N9    &kp LBKT          &trans         &kp C_VOL_DN  &mo 5         &trans        &trans
-&kp EQUAL   &kp N4     &kp N5    &kp N6    &kp KP_MINUS      &kp C_AC_BACK  &mkp MB1      &mkp MB3      &mkp MB2      &kp C_AC_FORWARD
-&kp N0      &kp N1     &kp N2    &kp N3    &kp KP_PLUS       &kp LA(LG(K))  &kp C_MUTE    &kp C_VOL_DN  &kp C_VOL_UP  &trans
-&kp DOT     &kp COMMA  &mkp MB1  &mkp MB3  &mkp MB2          &trans         &trans        &to 0         &to 0         &trans
+&kp ESCAPE  &kp N7     &kp N8    &kp N9    &kp LBKT          &kp LA(LG(K))  &trans    &mo 5     &trans    &kp C_MUTE
+&kp EQUAL   &kp N4     &kp N5    &kp N6    &kp KP_MINUS      &kp NONE       &mkp MB1  &mkp MB3  &mkp MB2  &kp NONE
+&kp N0      &kp N1     &kp N2    &kp N3    &kp KP_PLUS       &kp C_VOL_DN   &trans    &trans    &trans    &kp C_VOL_UP
+&kp DOT     &kp COMMA  &mkp MB1  &mkp MB3  &mkp MB2          &trans         &trans    &to 0     &to 0     &trans
             >;
         };
 
@@ -366,20 +366,18 @@
         /* index 13: オートマウス (右ボールを動かすと自動で入る)。
          * 入り方・抜け方は boards/shields/KobitoKey/kobitokey.dtsi の
          * mouse_runtime_input_processor (temp-layer-*) で決めている。DYA Studio でも変えられる。
-         * クリック (戻る・進む含む) は右手中段 K T N S H だけ (Mouse レイヤー (4) と同じ位置)。
+         * クリックは右手中段 T N S (左・中・右、Mouse レイヤー (4) と同じ位置)。K と H は &kp NONE。
          * 左親指 (無変換・Enter・BS) には置かない: 置くと選択後の BS などがクリックに化け、レイヤーからも抜けない。
-         * 戻る・進むはマウスボタン (MB4/MB5) ではなくキーボードの C_AC_BACK / C_AC_FORWARD。
-         * MB4/MB5 は PC 側のジェスチャーソフトに割り当てていて、別の操作になるため。
          * それ以外は &trans にしておくこと:
          * &trans のキー (修飾キーを除く) を押すとこのレイヤーから抜け、押した文字はそのまま出る。
          * &trans 以外を置いたキーは押しても抜けない (Mouse レイヤーに自動で入らないのはこのため)。 */
         auto_mouse {
             display-name = "AutoMouse";
             bindings = <
-&trans  &trans  &trans  &trans  &trans      &trans         &trans    &trans    &trans    &trans
-&trans  &trans  &trans  &trans  &trans      &kp C_AC_BACK  &mkp MB1  &mkp MB3  &mkp MB2  &kp C_AC_FORWARD
-&trans  &trans  &trans  &trans  &trans      &trans         &trans    &trans    &trans    &trans
-&trans  &trans  &trans  &trans  &trans      &trans         &trans    &trans    &trans    &trans
+&trans  &trans  &trans  &trans  &trans      &trans    &trans    &trans    &trans    &trans
+&trans  &trans  &trans  &trans  &trans      &kp NONE  &mkp MB1  &mkp MB3  &mkp MB2  &kp NONE
+&trans  &trans  &trans  &trans  &trans      &trans    &trans    &trans    &trans    &trans
+&trans  &trans  &trans  &trans  &trans      &trans    &trans    &trans    &trans    &trans
             >;
         };
 
