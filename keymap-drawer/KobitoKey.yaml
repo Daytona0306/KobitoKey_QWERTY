@@ -79,9 +79,9 @@ layers:
   - {t: BACKSPACE, h: LEFT GUI}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
+  - {t: TAB, h: RIGHT GUI}
+  - {t: ▽, type: trans}
   - {t: LANG1, h: RIGHT SHIFT}
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
   NUM/SYM1:
   - '1'
   - '2'
