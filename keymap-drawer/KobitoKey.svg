@@ -939,9 +939,10 @@ path.combo {
 </g>
 <g transform="translate(392, 84)" class="key keypos-15">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
-<a href="#Mouse">
-<text x="0" y="0" class="key tap layer-activator">Mouse</text>
-</a><text x="0" y="24" class="key hold">Back</text>
+<text x="0" y="0" class="key tap">
+<tspan x="0" dy="-0.9em">AC</tspan><tspan x="0" dy="1.2em">BACK</tspan>
+</text>
+<text x="0" y="24" class="key hold">Back</text>
 </g>
 <g transform="translate(448, 84)" class="key keypos-16">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
@@ -963,9 +964,10 @@ path.combo {
 </g>
 <g transform="translate(616, 84)" class="key keypos-19">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
-<a href="#Mouse">
-<text x="0" y="0" class="key tap layer-activator">Mouse</text>
-</a><text x="0" y="24" class="key hold">Fwd</text>
+<text x="0" y="0" class="key tap">
+<tspan x="0" dy="-0.9em">AC</tspan><tspan x="0" dy="1.2em">FORWARD</tspan>
+</text>
+<text x="0" y="24" class="key hold">Fwd</text>
 </g>
 <g transform="translate(28, 140)" class="key keypos-20">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
@@ -2518,9 +2520,10 @@ path.combo {
 </g>
 <g transform="translate(392, 84)" class="key keypos-15">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
-<a href="#Mouse">
-<text x="0" y="0" class="key tap layer-activator">Mouse</text>
-</a><text x="0" y="24" class="key hold">Back</text>
+<text x="0" y="0" class="key tap">
+<tspan x="0" dy="-0.9em">AC</tspan><tspan x="0" dy="1.2em">BACK</tspan>
+</text>
+<text x="0" y="24" class="key hold">Back</text>
 </g>
 <g transform="translate(448, 84)" class="key keypos-16">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
@@ -2542,9 +2545,10 @@ path.combo {
 </g>
 <g transform="translate(616, 84)" class="key keypos-19">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key"/>
-<a href="#Mouse">
-<text x="0" y="0" class="key tap layer-activator">Mouse</text>
-</a><text x="0" y="24" class="key hold">Fwd</text>
+<text x="0" y="0" class="key tap">
+<tspan x="0" dy="-0.9em">AC</tspan><tspan x="0" dy="1.2em">FORWARD</tspan>
+</text>
+<text x="0" y="24" class="key hold">Fwd</text>
 </g>
 <g transform="translate(28, 140)" class="key trans keypos-20">
 <rect rx="6" ry="6" x="-26" y="-26" width="52" height="52" class="key trans"/>
