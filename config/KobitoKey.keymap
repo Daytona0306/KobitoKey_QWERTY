@@ -152,6 +152,11 @@
 
         /* Ctrl+Alt+Tab (Windows の固定タスクスイッチャー)。
          *
+         * ★押した瞬間に Ctrl+Alt+Tab を1回だけ送って切り替え画面を開き、押している間は
+         *   レイヤー 14 (Switcher) で左ボールが矢印キーになる (選択を動かす)。
+         *   離すと Enter で決定する。中身は下の macros の win_switcher。
+         *   以前は &kp LA(LC(TAB)) で押しっぱなしにしていたため、キーリピートで選択が右へ流れていた。
+         *
          * ★このコンボは DYA Studio 側にも同じ内容で入れてある。
          *   そちらを有効にしていると毎回発動し、無効にすると効いたり
          *   効かなかったりする、という実機の結果がある。
@@ -172,7 +177,7 @@
          * timeout-ms 分だけ遅れる (200 + 80 = 280ms)。 */
         combo_ctrl_alt_tab {
             key-positions = <2 3>;
-            bindings = <&kp LA(LC(TAB))>;
+            bindings = <&win_switcher>;
             timeout-ms = <80>;
         };
     };
@@ -183,6 +188,23 @@
             #binding-cells = <0>;
             bindings = <&kp LS(LA(B)) &kp ENTER &kp LG(NUMBER_1)>;
             label = "BROWSTOEXPLOREE";
+        };
+
+        /* ウィンドウ切り替え (Ctrl+Alt+Tab コンボ用)。
+         * 押す: Ctrl+Alt+Tab を1回 → レイヤー 14 (Switcher) を有効にする
+         * 押している間: 左ボールの上下左右が矢印キー (KobitoKey_left.overlay の route_switcher)
+         * 離す: レイヤー 14 を切って Enter (選んだウィンドウに切り替わる) */
+        win_switcher: win_switcher {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            label = "WIN_SWITCHER";
+            bindings
+                = <&macro_tap &kp LC(LA(TAB))>
+                , <&macro_press &mo 14>
+                , <&macro_pause_for_release>
+                , <&macro_release &mo 14>
+                , <&macro_tap &kp ENTER>
+                ;
         };
 
         to_layer_0: to_layer_0 {
@@ -358,6 +380,18 @@
 &trans  &trans  &trans  &trans  &trans      &kp C_AC_BACK  &mkp MB1  &mkp MB3  &mkp MB2  &kp C_AC_FORWARD
 &trans  &trans  &trans  &trans  &trans      &trans         &trans    &trans    &trans    &trans
 &trans  &trans  &trans  &trans  &trans      &trans         &trans    &trans    &trans    &trans
+            >;
+        };
+
+        /* index 14: ウィンドウ切り替え中 (Ctrl+Alt+Tab コンボを押している間だけ)。
+         * キーは全部 &trans。左ボールを矢印キーにするためだけのレイヤー。 */
+        switcher {
+            display-name = "Switcher";
+            bindings = <
+&trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans  &trans
+&trans  &trans  &trans  &trans  &trans      &trans  &trans  &trans  &trans  &trans
             >;
         };
     };

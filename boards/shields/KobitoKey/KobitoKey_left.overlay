@@ -100,9 +100,11 @@
 
 /* 左ボールの音量ジェスチャー (レイヤー 6 = Bluetooth のときだけ)。
  *   上 = 音量アップ / 下 = 音量ダウン / 左 = ミュート / 右 = マイクミュート (Win+Alt+K)
- * eager モード: 方向が決まった時点で即発動し、続けて同じ方向に転がすと
- * stroke-size ぶん進むごとに繰り返す (音量を連続で上げ下げできる)。
- * gesture-cooldown-ms が連打の間隔の下限。ミュートの二度押しもこれで防ぐ。
+ * 音量 (上下) とミュート (左右) で感度を分けるため、プロセッサを 2 つにしている。
+ *   - 音量: 軽く転がすだけで反応し、転がし続けると stroke-size ごとに繰り返す (eager)
+ *   - ミュート: 大きく転がさないと反応しない。連続で切り替わらないよう cooldown も長い
+ * どちらも全方向の動きを受け取るが、自分の担当外の方向は何もせず捨てる。
+ * gesture-cooldown-ms が連打の間隔の下限。
  * RPC が書き換えるのは DT インスタンス 0 番 (&mg) だけなので、&mg より後に定義する。 */
 / {
     vol_gest_proc: vol_gest_proc {
@@ -117,8 +119,38 @@
 
         up    { pattern = <GESTURE_UP>;    bindings = <&kp C_VOL_UP>; };
         down  { pattern = <GESTURE_DOWN>;  bindings = <&kp C_VOL_DN>; };
+    };
+
+    mute_gest_proc: mute_gest_proc {
+        compatible = "zmk,input-processor-mouse-gesture";
+        #input-processor-cells = <0>;
+        enable-eager-mode;
+        always-active;
+        stroke-size = <60>;          /* 音量の 3 倍。ちょっと触っただけでは切り替わらない */
+        movement-threshold = <6>;
+        idle-timeout-ms = <100>;
+        gesture-cooldown-ms = <700>; /* 一度切り替えたら 0.7 秒は次を受け付けない */
+
         left  { pattern = <GESTURE_LEFT>;  bindings = <&kp C_MUTE>; };
         right { pattern = <GESTURE_RIGHT>; bindings = <&kp LG(LA(K))>; };
+    };
+
+    /* ウィンドウ切り替え中 (レイヤー 14、Ctrl+Alt+Tab コンボを押している間) の選択移動。
+     * 上下左右 = 矢印キー。転がし続けると stroke-size ごとに 1 つずつ進む。 */
+    switcher_gest_proc: switcher_gest_proc {
+        compatible = "zmk,input-processor-mouse-gesture";
+        #input-processor-cells = <0>;
+        enable-eager-mode;
+        always-active;
+        stroke-size = <25>;
+        movement-threshold = <4>;
+        idle-timeout-ms = <100>;
+        gesture-cooldown-ms = <120>;
+
+        up    { pattern = <GESTURE_UP>;    bindings = <&kp UP>; };
+        down  { pattern = <GESTURE_DOWN>;  bindings = <&kp DOWN>; };
+        left  { pattern = <GESTURE_LEFT>;  bindings = <&kp LEFT>; };
+        right { pattern = <GESTURE_RIGHT>; bindings = <&kp RIGHT>; };
     };
 };
 
@@ -138,6 +170,15 @@
         layers = <6>;
         input-processors =
             <&vol_gest_proc>,
+            <&mute_gest_proc>,
+            <&zip_xy_scaler 0 1>;
+    };
+
+    /* レイヤー 14 (Ctrl+Alt+Tab コンボを押している間) は切り替え画面の選択移動。 */
+    route_switcher {
+        layers = <14>;
+        input-processors =
+            <&switcher_gest_proc>,
             <&zip_xy_scaler 0 1>;
     };
 };
