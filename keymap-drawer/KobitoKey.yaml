@@ -20,7 +20,7 @@ layers:
   - T
   - {t: N, h: 'Gest: Arrow'}
   - S
-  - H
+  - {t: H, h: Mouse}
   - {t: Z, h: LEFT SHIFT}
   - X
   - C
@@ -148,7 +148,7 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: Brows, h: Explorer}
-  - {t: Macro, h: rec/play}
+  - {t: '&rmacro 1', h: rec/play}
   - Ctl+Gui+LEFT ARROW
   - Ctl+Gui+RIGHT ARROW
   - Alt+Ctl+Gui+D
@@ -169,10 +169,10 @@ layers:
   - '7'
   - '8'
   - '9'
+  - {t: '[', type: trans}
   - {t: ▽, type: trans}
-  - MUTE
   - VOL DN
-  - VOLUME UP
+  - Scroll
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - '='
@@ -180,26 +180,26 @@ layers:
   - '5'
   - {t: '6', type: held}
   - KP MINUS
-  - {t: Mouse, h: Fwd}
-  - {t: ▽, type: trans}
-  - Scroll
-  - {t: ▽, type: trans}
+  - {t: Mouse, h: Back}
+  - {t: Mouse, h: L Click, type: trans}
+  - {t: Mouse, h: M Click}
+  - {t: Mouse, h: R Click, type: trans}
   - {t: Mouse, h: Fwd}
   - '0'
   - '1'
   - '2'
   - '3'
   - KP PLUS
-  - {t: Mouse, h: Back}
-  - {t: Mouse, h: L Click}
-  - {t: Mouse, h: M Click}
-  - {t: Mouse, h: R Click}
-  - {t: Mouse, h: Back}
+  - {t: Alt+Gui+K, h: Back}
+  - {t: MUTE, h: L Click}
+  - {t: VOL DN, h: M Click}
+  - {t: VOL UP, h: R Click}
+  - {t: ▽, h: Back, type: trans}
   - .
   - ','
-  - '['
-  - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - {t: Mouse, h: L Click}
+  - {t: Mouse, h: M Click, type: trans}
+  - {t: Mouse, h: R Click, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: Base (Win), h: toggle}
@@ -528,6 +528,47 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  AutoMouse:
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: Mouse, h: Back}
+  - {t: Mouse, h: L Click}
+  - {t: Mouse, h: M Click}
+  - {t: Mouse, h: R Click}
+  - {t: Mouse, h: Fwd}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: Mouse, h: L Click}
+  - {t: Mouse, h: M Click}
+  - {t: Mouse, h: R Click}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
