@@ -38,9 +38,9 @@ layers:
   - {t: BACKSPACE, h: LEFT CONTROL}
   - {t: DEL, h: SYM2}
   - {t: SPACE, h: NUM/SYM1}
-  - {t: INT HENKAN, h: RIGHT SHIFT}
+  - {t: TAB, h: RIGHT CONTROL}
   - Ctl+F13
-  - TAB
+  - {t: INT HENKAN, h: RIGHT SHIFT}
   iPad:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
@@ -170,31 +170,31 @@ layers:
   - '8'
   - '9'
   - '['
+  - Alt+Gui+K
   - {t: ▽, type: trans}
-  - VOL DN
   - Scroll
   - {t: ▽, type: trans}
-  - {t: ▽, type: trans}
+  - MUTE
   - '='
   - '4'
   - '5'
   - {t: '6', type: held}
   - KP MINUS
-  - AC BACK
+  - ''
   - {t: Mouse, h: L Click}
   - {t: Mouse, h: M Click}
   - {t: Mouse, h: R Click}
-  - AC FORWARD
+  - ''
   - '0'
   - '1'
   - '2'
   - '3'
   - KP PLUS
-  - Alt+Gui+K
-  - MUTE
   - VOL DN
-  - VOL UP
   - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - {t: ▽, type: trans}
+  - VOL UP
   - .
   - ','
   - {t: Mouse, h: L Click}
@@ -549,11 +549,11 @@ layers:
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
-  - AC BACK
+  - ''
   - {t: Mouse, h: L Click}
   - {t: Mouse, h: M Click}
   - {t: Mouse, h: R Click}
-  - AC FORWARD
+  - ''
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
   - {t: ▽, type: trans}
