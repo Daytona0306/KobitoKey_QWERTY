@@ -130,7 +130,8 @@
     x-codes = <INPUT_REL_X>;
     y-codes = <INPUT_REL_Y>;
     xy-to-scroll-enabled;
-    rotation-degrees = <(-24)>;
+    /* 回転は手前の Lmouse (lmouse_runtime_input_processor) で済ませているので 0。 */
+    rotation-degrees = <0>;
     scale-multiplier = <2>;
     scale-divisor = <5>;
     /* 正の WHEEL = 上スクロール、正の REL_Y = カーソル下なので縦だけ反転。 */
