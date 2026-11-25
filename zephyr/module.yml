@@ -1,8 +1,8 @@
 name: kobitokey
 build:
-  # 充電ランプ (modules/charge-indicator) をこのリポジトリ自身のモジュールとしてビルドする
-  cmake: modules/charge-indicator
-  kconfig: modules/charge-indicator/Kconfig
+  # このリポジトリ自身のモジュール (modules/ 以下: 充電ランプ、ズームの段送り)
+  cmake: modules
+  kconfig: modules/Kconfig
   settings:
     board_root: .
-    dts_root: modules/charge-indicator
+    dts_root: modules

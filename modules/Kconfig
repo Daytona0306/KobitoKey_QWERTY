@@ -1,0 +1,2 @@
+rsource "charge-indicator/Kconfig"
+rsource "zoom-step/Kconfig"

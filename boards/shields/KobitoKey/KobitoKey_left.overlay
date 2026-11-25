@@ -76,6 +76,10 @@
     scroll_inertia_free: scroll_inertia_free {
         compatible = "zmk,input-processor-scroll-inertia";
         #input-processor-cells = <0>;
+        /* Ctrl / Cmd 押下中は慣性を止める (流れている最中のものも次の tick で止まる)。
+         * ズームは「レポート1回 = 1段」で数えるので、慣性が流れるとズームが止まらなくなる。
+         * zip_zoom_step の mods と揃えること。0x99 = MOD_LCTL | MOD_LGUI | MOD_RCTL | MOD_RGUI */
+        pause-mod = <0x99>;
         axis      = <0>;
         scale     = <1000>;
         scale-div = <1000>;
@@ -154,9 +158,13 @@
     };
 };
 
-/* 左ボールのカーソル (レイヤー 4 = Mouse のときだけ)。DYA Studio には "Lmouse" として出る。
- * 回転は Lscroll と同じ -24° (左ボールの取り付け角度)。ドライバの反転で REL_X/Y は
- * カーソルと同じ向きになっているので、軸の反転は要らない。 */
+/* 左ボールの補正 (感度・回転)。DYA Studio には "Lmouse" として出る。
+ * 右ボールと同じ形で、左ボールの動きはまずここを通り、そのあと Lscroll (kobitokey.dtsi) が
+ * スクロールに変える。Lscroll の「有効にするレイヤー」は既定で全レイヤーなので、基本はスクロール。
+ * Lscroll を Studio で無効なレイヤーにすると、そのレイヤーでは左ボールがカーソルになる
+ * (ただしベースレイヤー 0 は常に有効なので、0 を含めるとどこでもスクロールのまま)。
+ * 回転 -24° (左ボールの取り付け角度) はここで行い、Lscroll では回さない。
+ * ドライバの反転で REL_X/Y はカーソルと同じ向きになっているので、軸の反転は要らない。 */
 / {
     lmouse_runtime_input_processor: lmouse_runtime_input_processor {
         compatible = "zmk,input-processor-runtime";
@@ -177,13 +185,39 @@
     };
 };
 
+/* Ctrl / Cmd + ボールのズームを1ノッチ単位にまとめる (modules/zoom-step、torabo-tsuki LP と同じもの)。
+ *
+ * スムーススクロールのせいでボールは 1/16 ノッチ程度のホイールを大量に送る。
+ * スクロールは合計量で動くので気にならないが、ブラウザや PDF ビューア等の
+ * Ctrl+ホイールのズームは「イベント1回 = 1段」で数えるため効きすぎる。
+ * 修飾キー押下中はホイールを貯めて、1ノッチ分たまるごとに1回だけ送る。
+ * ★慣性 (scroll_inertia_*) より前に置くこと★ 修飾キー押下中のホイールはここで止めるので、
+ * ズーム中に弾いても慣性が arm されない。左右のボールで端数が混ざらないよう別の実体にする。 */
+/ {
+    zip_zoom_step: zip_zoom_step {
+        compatible = "zmk,input-processor-zoom-step";
+        #input-processor-cells = <0>;
+        /* 0 = ホストの1ノッチ (Windows なら 16 カウント)。
+         * ズームが速すぎるなら大きく、遅すぎるなら小さくする。 */
+        counts-per-step = <0>;
+    };
+
+    zip_zoom_step_r: zip_zoom_step_r {
+        compatible = "zmk,input-processor-zoom-step";
+        #input-processor-cells = <0>;
+        counts-per-step = <0>;
+    };
+};
+
 /* 左ボール: 常時スクロール (+ スナップ + 慣性) */
 &tb_left_listener {
     status = "okay";
     device = <&tb_left>;
     input-processors =
+        <&lmouse_runtime_input_processor>,
         <&scroll_runtime_input_processor>,
         <&zip_scroll_snap>,
+        <&zip_zoom_step>,
         <&scroll_inertia_free>;
 
     /* レイヤー 6 の間はスクロールの代わりに音量ジェスチャー。
@@ -203,13 +237,6 @@
         input-processors =
             <&switcher_gest_proc>,
             <&zip_xy_scaler 0 1>;
-    };
-
-    /* レイヤー 4 (Mouse) の間は左ボールもカーソル (Lmouse)。スクロールはしない。
-     * 子ノードは書いた順に判定されるので、6 と 14 (上) が同時に有効ならそちらが勝つ。 */
-    route_lmouse {
-        layers = <4>;
-        input-processors = <&lmouse_runtime_input_processor>;
     };
 };
 
@@ -263,6 +290,10 @@
     scroll_inertia_r: scroll_inertia_r {
         compatible = "zmk,input-processor-scroll-inertia";
         #input-processor-cells = <0>;
+        /* Ctrl / Cmd 押下中は慣性を止める (流れている最中のものも次の tick で止まる)。
+         * ズームは「レポート1回 = 1段」で数えるので、慣性が流れるとズームが止まらなくなる。
+         * zip_zoom_step の mods と揃えること。0x99 = MOD_LCTL | MOD_LGUI | MOD_RCTL | MOD_RGUI */
+        pause-mod = <0x99>;
         axis      = <0>;
         layer     = <5>;
         scale     = <1000>;
@@ -298,5 +329,6 @@
         <&mouse_runtime_input_processor>,
         <&rscroll_runtime_input_processor>,
         <&zip_scroll_snap_r>,
+        <&zip_zoom_step_r>,
         <&scroll_inertia_r>;
 };
